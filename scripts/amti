@@ -1,0 +1,50 @@
+#! /usr/bin/python
+
+"""The Command line interface for amti"""
+
+import logging
+
+import click
+
+from amti import clis
+from amti.utils import log
+
+
+logger = logging.getLogger(__name__)
+
+
+@click.group(
+    context_settings={
+        'help_option_names': ['--help', '-h']
+    })
+@click.option(
+    '--verbose', '-v',
+    is_flag=True,
+    help='Set log level to DEBUG.')
+def amti(verbose):
+    """Alexandria Mechanical Turk Interface: a CLI for MTurk."""
+    log_level = logging.DEBUG if verbose else logging.INFO
+    log.config_logging(log_level)
+
+
+subcommands = [
+    # create
+    clis.create_batch,
+    # status
+    clis.status_batch,
+    # review
+    clis.review_batch,
+    # save
+    clis.save_batch,
+    # delete
+    clis.delete_batch,
+    # extract xml
+    clis.extract_xml
+]
+
+for subcommand in subcommands:
+    amti.add_command(subcommand)
+
+
+if __name__ == '__main__':
+    amti()

@@ -1,0 +1,8 @@
+{
+    "AutoApprovalDelayInSeconds": 300,
+    "AssignmentDurationInSeconds": 600,
+    "Reward": "0.25",
+    "Title": "Example ExternalQuestion HIT",
+    "Keywords": "ExternalQuestion, example, test, sandbox",
+    "Description": "An ExternalQuestion HIT designed as an example for a script that generates HITs"
+}

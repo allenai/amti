@@ -1,0 +1,14 @@
+# dev tools
+.envrc
+.python-version
+
+# editors
+*~
+\#*\#
+
+# python
+__pycache__
+*pyc
+*pyo
+*egg-info
+dist/

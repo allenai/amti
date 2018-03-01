@@ -1,0 +1,4 @@
+Any documentation about the task can go in this file. For example:
+
+Because this HIT is an ExternalQuestion, you need to run the server from
+$REPO using the command $COMMAND.

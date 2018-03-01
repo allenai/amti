@@ -1,0 +1,8 @@
+{
+    "AutoApprovalDelayInSeconds": 300,
+    "AssignmentDurationInSeconds": 600,
+    "Reward": "0.25",
+    "Title": "Example HTMLQuestion HIT",
+    "Keywords": "HTMLQuestion, example, test, sandbox",
+    "Description": "An HTMLQuestion HIT designed as an example for a script that generates HITs"
+}
