@@ -1,0 +1,18 @@
+{
+  "AutoApprovalDelayInSeconds": 300,
+  "AssignmentDurationInSeconds": 600,
+  "Reward": "0.25",
+  "Title": "Example HTMLQuestion HIT with Qualification",
+  "Keywords": "HTMLQuestion, example, test, sandbox, Qualification Type",
+  "Description": "An HTMLQuestion HIT designed as an example for a script that generates HITs",
+  "QualificationRequirements": [
+    {
+      "QualificationTypeId": "$QUALIFICATION_TYPE_ID",
+      "Comparator": "GreaterThanOrEqualTo",
+      "IntegerValues": [
+        100
+      ],
+      "RequiredToPreview": false
+    }
+  ]
+}
