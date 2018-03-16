@@ -1,0 +1,16 @@
+<AnswerKey xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2005-10-01/AnswerKey.xsd">
+  <Question>
+    <QuestionIdentifier>first_question</QuestionIdentifier>
+    <AnswerOption>
+      <SelectionIdentifier>no</SelectionIdentifier>
+      <AnswerScore>50</AnswerScore>
+    </AnswerOption>
+  </Question>
+  <Question>
+    <QuestionIdentifier>second_question</QuestionIdentifier>
+    <AnswerOption>
+      <SelectionIdentifier>yes</SelectionIdentifier>
+      <AnswerScore>50</AnswerScore>
+    </AnswerOption>
+  </Question>
+</AnswerKey>

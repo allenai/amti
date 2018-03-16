@@ -7,12 +7,14 @@ ENVS = {
     'live': {
         'region_name': 'us-east-1',
         'endpoint_url': 'https://mturk-requester.us-east-1.amazonaws.com',
-        'preview_url': 'https://www.mturk.com/',
+        'worker_url': 'https://www.mturk.com/',
+        'requester_url': 'https://requester.mturk.com/'
     },
     'sandbox': {
         'region_name': 'us-east-1',
         'endpoint_url': 'https://mturk-requester-sandbox.us-east-1.amazonaws.com',
-        'preview_url': 'https://workersandbox.mturk.com/',
+        'worker_url': 'https://workersandbox.mturk.com/',
+        'requester_url': 'https://requestersandbox.mturk.com/'
     }
 }
 
@@ -98,4 +100,28 @@ HITTYPE_PROPERTIES = {
 HIT_PROPERTIES = {
     'MaxAssignments': int,
     'LifetimeInSeconds': int
+}
+
+
+QUALIFICATIONTYPE_DIR_STRUCTURE = \
+    ('qualification-type-{qualificationtype_id}', {
+        'definition': ('definition', {
+            'properties': ('qualificationtypeproperties.json', {}),
+            'test': ('test.xml', {}),
+            'answerkey': ('answerkey.xml', {})
+        }),
+        'qualificationtype': (
+            'qualificationtype-{qualificationtype_id}.jsonl',
+            {}
+        )
+    })
+
+
+QUALIFICATIONTYPE_PROPERTIES = {
+    'Name': str,
+    'Keywords': str,
+    'Description': str,
+    'QualificationTypeStatus': str,
+    'RetryDelayInSeconds': int,
+    'TestDurationInSeconds': int
 }

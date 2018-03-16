@@ -1,6 +1,8 @@
 """CLIs for managing HITs and their results"""
 
-from amti.clis.create import create_batch
+from amti.clis.create import (
+    create_batch,
+    create_qualificationtype)
 from amti.clis.status import status_batch
 from amti.clis.review import review_batch
 from amti.clis.save import save_batch

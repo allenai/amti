@@ -49,17 +49,19 @@ def create_batch(definition_dir, data_path, save_dir, live):
       - hittypeproperties.json: a json file defining properties for the
         HIT type that the newly created HITs will have.
 
-    For an example, see 'TODO: INSERT LINK TO EXAMPLE HERE'.
+    For an example, see
+    `here <https://github.com/allenai/amti/tree/master/examples/external-question/definition`.
 
     DATA_PATH should be a `JSON Lines <http://jsonlines.org/>`_
-    file. For an example, see 'TODO: INSERT LINK TO EXAMPLE HERE'.
+    file. For an example, see
+    `here <https://github.com/allenai/amti/tree/master/examples/external-question/data.jsonl>`.
 
     SAVE_DIR should be a path to a directory in which the batch's data
     will be saved.
     """
     env = 'live' if live else 'sandbox'
 
-    preview_url = settings.ENVS[env]['preview_url']
+    worker_url = settings.ENVS[env]['worker_url']
 
     client = mturk_utils.get_mturk_client(env)
 
@@ -72,5 +74,59 @@ def create_batch(definition_dir, data_path, save_dir, live):
     logger.info(
         f'Finished.'
         f'\n'
-        f'\n    Preview HITs: {preview_url}'
+        f'\n    Preview HITs: {worker_url}'
+        f'\n')
+
+
+@click.command(
+    context_settings={
+        'help_option_names': ['--help', '-h']
+    })
+@click.argument(
+    'definition_dir',
+    type=click.Path(exists=True, file_okay=False, dir_okay=True))
+@click.argument(
+    'save_dir',
+    type=click.Path(exists=True, file_okay=False, dir_okay=True))
+@click.option(
+    '--live', '-l',
+    is_flag=True,
+    help='Create the Qualification Type on the live MTurk site.')
+def create_qualificationtype(definition_dir, save_dir, live):
+    """Create a Qualification Type using DEFINITION_DIR.
+
+    Create a Qualification Type using DEFINITION_DIR, and then save
+    that Qualification Type's defining data to SAVE_DIR.
+
+    DEFINITION_DIR should be a directory containing files with the
+    following names:
+
+      \b
+      - qualificationtypeproperties.json: the defining properties for
+        the qualication type.
+      - test.xml: the XML defining the qualification test for the
+        qualification type.
+      - answerkey.xml: the answer key for the qualification test.
+
+    For an example, see
+    `here <https://github.com/allenai/amti/tree/master/examples/qualification-type/definition>`.
+
+    SAVE_DIR should be a path to a directory in which the qualification
+    type's data will be saved.
+    """
+    env = 'live' if live else 'sandbox'
+
+    requester_url = settings.ENVS[env]['requester_url']
+
+    client = mturk_utils.get_mturk_client(env)
+
+    actions.create_qualificationtype(
+        client=client,
+        definition_dir=definition_dir,
+        save_dir=save_dir)
+
+    logger.info(
+        f'Finished.'
+        f'\n'
+        f'\n    View the Qualification Type: {requester_url}'
         f'\n')

@@ -12,6 +12,7 @@ import jinja2
 from amti import settings
 from amti.utils import log
 from amti.utils import validation
+from amti.utils import serialization
 
 
 logger = logging.getLogger(__name__)
@@ -265,8 +266,7 @@ def create_batch(
         the path to a JSONL file holding the data that should be used to
         generate the HITs in the batch.
     save_dir : str
-        the path to the directory in which to write the batch
-        directory.
+        the path to the directory in which to write the batch directory.
 
     Returns
     -------
@@ -286,3 +286,104 @@ def create_batch(
         batch_dir=batch_dir)
 
     logger.info('HIT Creation Complete.')
+
+
+def create_qualificationtype(
+        client,
+        definition_dir,
+        save_dir):
+    """Create a qualification type in MTurk.
+
+    Parameters
+    ----------
+    client : MTurk.Client
+        a boto3 client for MTurk.
+    definition_dir : str
+        the path to the directory defining the qualification type.
+    save_dir : str
+        the path to the directory in which to write the qualification
+        type directory.
+
+    Returns
+    -------
+    None
+    """
+    logger.info('Creating qualification type directory.')
+
+    qualificationtype_dir_name, qualificationtype_dir_subpaths = \
+        settings.QUALIFICATIONTYPE_DIR_STRUCTURE
+    definition_dir_name, definition_dir_subpaths = \
+        qualificationtype_dir_subpaths['definition']
+    properties_file_name, _ = definition_dir_subpaths['properties']
+    test_file_name, _ = definition_dir_subpaths['test']
+    answerkey_file_name, _ = definition_dir_subpaths['answerkey']
+    qualificationtype_file_name, _ = \
+        qualificationtype_dir_subpaths['qualificationtype']
+
+    # construct useful paths
+    properties_path = os.path.join(
+        definition_dir, properties_file_name)
+    test_path = os.path.join(
+        definition_dir, test_file_name)
+    answerkey_path = os.path.join(
+        definition_dir, answerkey_file_name)
+
+    # read in and validate the qualification type properties
+    with open(properties_path, 'r') as properties_file:
+        properties = json.load(properties_file)
+    properties_validation_errors = validation.validate_dict(
+        properties, settings.QUALIFICATIONTYPE_PROPERTIES)
+    if properties_validation_errors:
+        raise ValueError(
+            'Qualification Type properties file ({properties_path}) had'
+            ' the following validation errors:'
+            '\n{validation_errors}'.format(
+                properties_path=properties_path,
+                validation_errors='\n'.join(properties_validation_errors)))
+
+    # read in the qualification test
+    with open(test_path, 'r') as test_file:
+        test = test_file.read()
+
+    # read in the answerkey
+    with open(answerkey_path, 'r') as answerkey_file:
+        answerkey = answerkey_file.read()
+
+    with tempfile.TemporaryDirectory() as working_dir:
+        # construct output paths
+        working_definition_dir = os.path.join(
+            working_dir, definition_dir_name)
+        os.mkdir(working_definition_dir)
+
+        # copy the definition files over
+        for _, (file_name, _) in definition_dir_subpaths.items():
+            shutil.copyfile(
+                os.path.join(definition_dir, file_name),
+                os.path.join(working_definition_dir, file_name))
+
+        # create the qualification type
+        qualificationtype_response = client.create_qualification_type(
+            Test=test,
+            AnswerKey=answerkey,
+            **properties)
+        qualificationtype_id = \
+            qualificationtype_response['QualificationType']['QualificationTypeId']
+
+        qualificationtype_path = os.path.join(
+            working_dir, qualificationtype_file_name.format(
+                qualificationtype_id=qualificationtype_id))
+        with open(qualificationtype_path, 'w') as qualificationtype_file:
+            json.dump(
+                qualificationtype_response,
+                qualificationtype_file,
+                default=serialization.json_helper)
+
+        shutil.copytree(
+            working_dir,
+            os.path.join(
+                save_dir,
+                qualificationtype_dir_name.format(
+                    qualificationtype_id=qualificationtype_id)))
+
+    logger.info(
+        f'Created Qualification Type (ID: {qualificationtype_id}).')

@@ -39,7 +39,9 @@ subcommands = [
     # delete
     clis.delete_batch,
     # extract xml
-    clis.extract_xml
+    clis.extract_xml,
+    # create a qualification type
+    clis.create_qualificationtype
 ]
 
 for subcommand in subcommands:

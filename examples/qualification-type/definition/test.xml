@@ -1,0 +1,63 @@
+<QuestionForm xmlns="http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2017-11-06/QuestionForm.xsd">
+  <Overview>
+    <Title>Example Qualification Test</Title>
+    <Text>This is an example.</Text>
+  </Overview>
+  <Overview>
+    <FormattedContent>
+      <![CDATA[
+        Formatted content can use things like <i>italics</i> and
+        <b>bold</b>.
+      ]]>
+    </FormattedContent>
+    <List>
+      <ListItem>item 1</ListItem>
+      <ListItem>item 2</ListItem>
+      <ListItem>item 3</ListItem>
+    </List>
+  </Overview>
+  <Question>
+    <QuestionIdentifier>first_question</QuestionIdentifier>
+    <IsRequired>true</IsRequired>
+    <QuestionContent>
+      <Text>The first question.</Text>
+    </QuestionContent>
+    <AnswerSpecification>
+      <SelectionAnswer>
+        <StyleSuggestion>radiobutton</StyleSuggestion>
+        <Selections>
+          <Selection>
+            <SelectionIdentifier>yes</SelectionIdentifier>
+            <Text>yes</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>no</SelectionIdentifier>
+            <Text>no</Text>
+          </Selection>
+        </Selections>
+      </SelectionAnswer>
+    </AnswerSpecification>
+  </Question>
+  <Question>
+    <QuestionIdentifier>second_question</QuestionIdentifier>
+    <IsRequired>true</IsRequired>
+    <QuestionContent>
+      <Text>The second question.</Text>
+    </QuestionContent>
+    <AnswerSpecification>
+      <SelectionAnswer>
+        <StyleSuggestion>radiobutton</StyleSuggestion>
+        <Selections>
+          <Selection>
+            <SelectionIdentifier>yes</SelectionIdentifier>
+            <Text>yes</Text>
+          </Selection>
+          <Selection>
+            <SelectionIdentifier>no</SelectionIdentifier>
+            <Text>no</Text>
+          </Selection>
+        </Selections>
+      </SelectionAnswer>
+    </AnswerSpecification>
+  </Question>
+</QuestionForm>
