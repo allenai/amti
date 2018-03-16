@@ -92,22 +92,22 @@ def save_batch(
             list_assignments_response = client.list_assignments_for_hit(
                 HITId=hit_id)
             assignments = list_assignments_response['Assignments']
-            for assignment in assignments:
-                assignment_id = assignment['AssignmentId']
-                assignment_status = assignment['AssignmentStatus']
+            with open(assignments_file_path, 'w') as assignments_file:
+                for assignment in assignments:
+                    assignment_id = assignment['AssignmentId']
+                    assignment_status = assignment['AssignmentStatus']
 
-                logger.debug(
-                    f'Assignment (ID: {assignment_id}) Status:'
-                    f' {assignment_status}.')
+                    logger.debug(
+                        f'Assignment (ID: {assignment_id}) Status:'
+                        f' {assignment_status}.')
 
-                if assignment_status not in ['Approved', 'Rejected']:
-                    raise ValueError(
-                        f'Assignment (ID: {assignment_id}) has status'
-                        f' "{assignment_status}". In order to save a'
-                        f' batch all assignments must have "Approved" or'
-                        f' "Rejected" status.')
+                    if assignment_status not in ['Approved', 'Rejected']:
+                        raise ValueError(
+                            f'Assignment (ID: {assignment_id}) has status'
+                            f' "{assignment_status}". In order to save a'
+                            f' batch all assignments must have "Approved" or'
+                            f' "Rejected" status.')
 
-                with open(assignments_file_path, 'a') as assignments_file:
                     assignments_file.write(json.dumps(
                         assignment, default=serialization.json_helper) + '\n')
 
