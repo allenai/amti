@@ -342,12 +342,14 @@ def create_qualificationtype(
                 validation_errors='\n'.join(properties_validation_errors)))
 
     # read in the qualification test
-    with open(test_path, 'r') as test_file:
-        test = test_file.read()
+    if os.path.exists(test_path):
+        with open(test_path, 'r') as test_file:
+            properties['Test'] = test_file.read()
 
     # read in the answerkey
-    with open(answerkey_path, 'r') as answerkey_file:
-        answerkey = answerkey_file.read()
+    if os.path.exists(answerkey_path):
+        with open(answerkey_path, 'r') as answerkey_file:
+            properties['AnswerKey'] = answerkey_file.read()
 
     with tempfile.TemporaryDirectory() as working_dir:
         # construct output paths
@@ -357,15 +359,14 @@ def create_qualificationtype(
 
         # copy the definition files over
         for _, (file_name, _) in definition_dir_subpaths.items():
-            shutil.copyfile(
-                os.path.join(definition_dir, file_name),
-                os.path.join(working_definition_dir, file_name))
+            original_path = os.path.join(definition_dir, file_name)
+            new_path = os.path.join(working_definition_dir, file_name)
+            if (file_name not in [test_file_name, answerkey_file_name]
+                or os.path.exists(original_path)):
+                shutil.copyfile(original_path, new_path)
 
         # create the qualification type
-        qualificationtype_response = client.create_qualification_type(
-            Test=test,
-            AnswerKey=answerkey,
-            **properties)
+        qualificationtype_response = client.create_qualification_type(**properties)
         qualificationtype_id = \
             qualificationtype_response['QualificationType']['QualificationTypeId']
 
