@@ -39,53 +39,55 @@ def review_hit(
 
     logger.info(f'HIT {hit_id} Status: {hit_status}')
 
-    list_assignments_response = client.list_assignments_for_hit(
-        HITId=hit_id)
-    assignments = list_assignments_response['Assignments']
-    for assignment in assignments:
-        assignment_id = assignment['AssignmentId']
-        assignment_status = assignment['AssignmentStatus']
-        answers_xml = minidom.parseString(assignment['Answer'])
+    assignments_paginator = client.get_paginator(
+        'list_assignments_for_hit')
+    assignments_pages = assignments_paginator.paginate(HITId=hit_id)
+    for i, assignments_page in enumerate(assignments_pages):
+        logger.debug(f'Reviewing assignments. Page {i}.')
+        for assignment in assignments_page['Assignments']:
+            assignment_id = assignment['AssignmentId']
+            assignment_status = assignment['AssignmentStatus']
+            answers_xml = minidom.parseString(assignment['Answer'])
 
-        logger.info(
-            f'Assignment (ID: {assignment_id}) Status: {assignment_status}.')
+            logger.info(
+                f'Assignment (ID: {assignment_id}) Status: {assignment_status}.')
 
-        if assignment_status != 'Submitted':
-            logger.debug(
-                f'Assignment (ID: {assignment_id}) does not have status'
-                f' "Submitted". Skipping.')
-            continue
-        elif assignment_status == 'Submitted':
-            logger.info(f'Reviewing assignment (ID: {assignment_id}).')
+            if assignment_status != 'Submitted':
+                logger.debug(
+                    f'Assignment (ID: {assignment_id}) does not have status'
+                    f' "Submitted". Skipping.')
+                continue
+            elif assignment_status == 'Submitted':
+                logger.info(f'Reviewing assignment (ID: {assignment_id}).')
 
-            print(
-                'HIT ID: {hit_id}'
-                '\nAssignment ID: {assignment_id}'
-                '\n'
-                '\nAnswers'
-                '\n======='
-                '\n{answers}'.format(
-                    hit_id=hit_id,
-                    assignment_id=assignment_id,
-                    answers=answers_xml.toprettyxml()))
+                print(
+                    'HIT ID: {hit_id}'
+                    '\nAssignment ID: {assignment_id}'
+                    '\n'
+                    '\nAnswers'
+                    '\n======='
+                    '\n{answers}'.format(
+                        hit_id=hit_id,
+                        assignment_id=assignment_id,
+                        answers=answers_xml.toprettyxml()))
 
-            approve = None
-            while approve is None:
-                user_input = input('Approve? [y/n]').strip().lower()
-                if user_input in ['y', 'n']:
-                    approve = user_input == 'y'
+                approve = None
+                while approve is None:
+                    user_input = input('Approve? [y/n]').strip().lower()
+                    if user_input in ['y', 'n']:
+                        approve = user_input == 'y'
+                    else:
+                        print('Please type either "y" or "n".')
+
+                if approve:
+                    logger.info(f'Approving assignment (ID: {assignment_id}).')
+                    client.approve_assignment(
+                        AssignmentId=assignment_id,
+                        OverrideRejection=False)
                 else:
-                    print('Please type either "y" or "n".')
-
-            if approve:
-                logger.info(f'Approving assignment (ID: {assignment_id}).')
-                client.approve_assignment(
-                    AssignmentId=assignment_id,
-                    OverrideRejection=False)
-            else:
-                logger.info(
-                    f'Did not approve assignment (ID: {assignment_id}).'
-                    f' Please make sure to manually reject it.')
+                    logger.info(
+                        f'Did not approve assignment (ID: {assignment_id}).'
+                        f' Please make sure to manually reject it.')
 
 
 def review_batch(

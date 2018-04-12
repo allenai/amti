@@ -93,9 +93,9 @@ def save_batch(
                 'list_assignments_for_hit')
             assignments_pages = assignments_paginator.paginate(HITId=hit_id)
             with open(assignments_file_path, 'w') as assignments_file:
-                for i, assignment_page in enumerate(assignments_pages):
+                for i, assignments_page in enumerate(assignments_pages):
                     logger.debug(f'Saving assignments. Page {i}.')
-                    for assignment in assignment_page['Assignments']:
+                    for assignment in assignments_page['Assignments']:
                         assignment_id = assignment['AssignmentId']
                         assignment_status = assignment['AssignmentStatus']
 
