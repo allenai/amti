@@ -1,4 +1,4 @@
-"""Command line interfaces for viewing the statuses of HITs"""
+"""Command line interfaces for expiring the HITs"""
 
 import logging
 
@@ -23,7 +23,7 @@ logger = logging.getLogger(__name__)
 @click.option(
     '--live', '-l',
     is_flag=True,
-    help='View the status of HITs from the live MTurk site.')
+    help='Expire the HITs from the live MTurk site.')
 def expire_batch(batch_dir, live):
     """Expire all the HITs defined in BATCH_DIR.
 
