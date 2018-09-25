@@ -1,0 +1,44 @@
+"""Command line interfaces for viewing the statuses of HITs"""
+
+import logging
+
+import boto3
+import click
+
+from amti import actions
+from amti import settings
+from amti.utils import mturk as mturk_utils
+
+
+logger = logging.getLogger(__name__)
+
+
+@click.command(
+    context_settings={
+        'help_option_names': ['--help', '-h']
+    })
+@click.argument(
+    'batch_dir',
+    type=click.Path(exists=True, file_okay=False, dir_okay=True))
+@click.option(
+    '--live', '-l',
+    is_flag=True,
+    help='View the status of HITs from the live MTurk site.')
+def expire_batch(batch_dir, live):
+    """Expire all the HITs defined in BATCH_DIR.
+
+    Given a directory (BATCH_DIR) that represents a batch of HITs in MTurk, 
+    expire all the unanswered HITs.
+    """
+    env = 'live' if live else 'sandbox'
+
+    client = mturk_utils.get_mturk_client(env)
+
+    batch_expire = actions.expire_batch(
+        client=client,
+        batch_dir=batch_dir)
+
+    batch_id = batch_expire['batch_id']
+    print('Finished expiring batch.')
+
+    logger.info('Finished expiring batch.')
