@@ -82,11 +82,15 @@ site.
 
          amti status_batch batch-*
 
-  5. Since your batch is now ready for review, review it with:
+  5. (optional) If you want to cancel all the HITs in the batch:
+
+         amti expire_batch batch-*
+
+  6. Since your batch is now ready for review, review it with:
 
          amti review_batch batch-*
 
-  6. Once you've approved all of your HITs, you can save the results
+  7. Once you've approved all of your HITs, you can save the results
      from the batch:
 
          amti save_batch batch-*
@@ -95,7 +99,7 @@ site.
      new `results` subdirectory with the information on your HITs and
      assignments.
 
-  7. Since you've saved your batch, dispose of it from the MTurk site
+  8. Since you've saved your batch, dispose of it from the MTurk site
      using:
 
          amti delete_batch batch-*
@@ -104,7 +108,7 @@ site.
      up when you examine your open HITs; however, it leaves your batch
      directory intact and unchanged.
 
-  8. Lastly, you can extract XML from all the assignments you've saved
+  9. Lastly, you can extract XML from all the assignments you've saved
      into your batch directory using the following command:
 
          amti extract_xml batch-* .
@@ -222,6 +226,7 @@ To use `amti` as a CLI for Mechanical Turk, [install](#installation)
     Commands:
       create_batch  Create a batch of HITs using DEFINITION_DIR...
       delete_batch  Delete the batch of HITs defined in...
+      expire_batch  Cancel (expire) a batch of open HITs defined in...
       extract_xml   Extract XML data from assignments in...
       review_batch  Review the batch of HITs defined in...
       save_batch    Save results from the batch of HITs defined...
