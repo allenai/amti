@@ -1,4 +1,4 @@
-"""Command line interfaces for saving HITs"""
+"""Command line interfaces for expiring the HITs"""
 
 import logging
 
@@ -22,21 +22,21 @@ logger = logging.getLogger(__name__)
 @click.option(
     '--live', '-l',
     is_flag=True,
-    help='Save HITs from the live MTurk site.')
-def save_batch(batch_dir, live):
-    """Save results from the batch of HITs defined in BATCH_DIR.
+    help='Expire the HITs from the live MTurk site.')
+def expire_batch(batch_dir, live):
+    """Expire all the HITs defined in BATCH_DIR.
 
-    Given a directory (BATCH_DIR) that represents a batch of HITs with
-    HITs out in MTurk, all of which have been reviewed and either
-    approved or rejected, collect the results and save them into
-    BATCH_DIR.
+    Given a directory (BATCH_DIR) that represents a batch of HITs in MTurk,
+    expire all the unanswered HITs.
     """
     env = 'live' if live else 'sandbox'
 
     client = mturk_utils.get_mturk_client(env)
 
-    actions.save_batch(
+    batch_expire = actions.expire_batch(
         client=client,
         batch_dir=batch_dir)
 
-    logger.info('Finished saving batch.')
+    batch_id = batch_expire['batch_id']
+
+    logger.info('Finished expiring batch.')
