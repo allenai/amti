@@ -26,7 +26,7 @@ logger = logging.getLogger(__name__)
 def expire_batch(batch_dir, live):
     """Expire all the HITs defined in BATCH_DIR.
 
-    Given a directory (BATCH_DIR) that represents a batch of HITs in MTurk, 
+    Given a directory (BATCH_DIR) that represents a batch of HITs in MTurk,
     expire all the unanswered HITs.
     """
     env = 'live' if live else 'sandbox'
