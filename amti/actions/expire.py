@@ -51,16 +51,17 @@ def expire_batch(
     if not os.path.isfile(incomplete_file_path):
         raise ValueError(
             f'No {incomplete_file_name} file was found in {batch_dir}.'
-            f' Please make sure the batch name.')
+            f' Please make sure that the directory is a batch that has'
+            f' open HITs to be expired.')
     with open(incomplete_file_path) as incomplete_file:
         hit_ids = json.load(incomplete_file)['hit_ids']
 
-    logger.info(f'Making batch {batch_id} expired.')
+    logger.info(f'Expiring HITs in batch {batch_id}.')
 
     for hit_id in hit_ids:
         hit = client.update_expiration_for_hit(HITId=hit_id, ExpireAt=datetime.datetime.now())
 
-    logger.info(f'The batch {batch_id} is expired now.')
+    logger.info(f'All HITs in batch {batch_id} are now expired.')
 
     return {
         'batch_id': batch_id,
