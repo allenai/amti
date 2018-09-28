@@ -38,6 +38,5 @@ def expire_batch(batch_dir, live):
         batch_dir=batch_dir)
 
     batch_id = batch_expire['batch_id']
-    print('Finished expiring batch.')
 
     logger.info('Finished expiring batch.')
