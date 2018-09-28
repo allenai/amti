@@ -1,6 +1,5 @@
 """Functions for expiring all (unanswered) HITs"""
 
-import collections
 import json
 import logging
 import os

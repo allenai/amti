@@ -2,7 +2,6 @@
 
 import logging
 
-import boto3
 import click
 
 from amti import actions
