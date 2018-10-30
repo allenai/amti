@@ -13,7 +13,8 @@ logger = logging.getLogger(__name__)
 
 def review_hit(
         client,
-        hit_id):
+        hit_id,
+        approve_all):
     """Manually review the results from a HIT.
 
     Parameters
@@ -22,6 +23,8 @@ def review_hit(
         a boto3 client for MTurk.
     hit_id : str
         the ID for the HIT to approve or reject.
+    approve_all : bool
+        a flag to decide approve all submissions
 
     Returns
     -------
@@ -58,41 +61,48 @@ def review_hit(
                     f' "Submitted". Skipping.')
                 continue
             elif assignment_status == 'Submitted':
-                logger.info(f'Reviewing assignment (ID: {assignment_id}).')
-
-                print(
-                    'HIT ID: {hit_id}'
-                    '\nAssignment ID: {assignment_id}'
-                    '\n'
-                    '\nAnswers'
-                    '\n======='
-                    '\n{answers}'.format(
-                        hit_id=hit_id,
-                        assignment_id=assignment_id,
-                        answers=answers_xml.toprettyxml()))
-
-                approve = None
-                while approve is None:
-                    user_input = input('Approve? [y/n]').strip().lower()
-                    if user_input in ['y', 'n']:
-                        approve = user_input == 'y'
-                    else:
-                        print('Please type either "y" or "n".')
-
-                if approve:
+                if approve_all:
                     logger.info(f'Approving assignment (ID: {assignment_id}).')
                     client.approve_assignment(
                         AssignmentId=assignment_id,
                         OverrideRejection=False)
                 else:
-                    logger.info(
-                        f'Did not approve assignment (ID: {assignment_id}).'
-                        f' Please make sure to manually reject it.')
+                    logger.info(f'Reviewing assignment (ID: {assignment_id}).')
+
+                    print(
+                        'HIT ID: {hit_id}'
+                        '\nAssignment ID: {assignment_id}'
+                        '\n'
+                        '\nAnswers'
+                        '\n======='
+                        '\n{answers}'.format(
+                            hit_id=hit_id,
+                            assignment_id=assignment_id,
+                            answers=answers_xml.toprettyxml()))
+
+                    approve = None
+                    while approve is None:
+                        user_input = input('Approve? [y/n]').strip().lower()
+                        if user_input in ['y', 'n']:
+                            approve = user_input == 'y'
+                        else:
+                            print('Please type either "y" or "n".')
+
+                    if approve:
+                        logger.info(f'Approving assignment (ID: {assignment_id}).')
+                        client.approve_assignment(
+                            AssignmentId=assignment_id,
+                            OverrideRejection=False)
+                    else:
+                        logger.info(
+                            f'Did not approve assignment (ID: {assignment_id}).'
+                            f' Please make sure to manually reject it.')
 
 
 def review_batch(
         client,
-        batch_dir):
+        batch_dir,
+        approve_all):
     """Manually review the HITs in a batch.
 
     Parameters
@@ -101,6 +111,8 @@ def review_batch(
         a boto3 client for MTurk.
     batch_dir : str
         the path to the directory for the batch.
+    approve_all : bool
+        a flag to decide approve all submissions
 
     Returns
     -------
@@ -129,6 +141,6 @@ def review_batch(
     logger.info(f'Reviewing batch {batch_id}.')
 
     for hit_id in hit_ids:
-        review_hit(client=client, hit_id=hit_id)
+        review_hit(client=client, hit_id=hit_id, approve_all=approve_all)
 
     logger.info(f'Review of batch {batch_id} is complete.')
