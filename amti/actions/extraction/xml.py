@@ -52,6 +52,9 @@ def xml(
     with open(batchid_file_path) as batchid_file:
         batch_id = batchid_file.read().strip()
 
+    logger.info(
+        f'Beginning to extract batch {batch_id} to XML.')
+
     xml_dir_name = settings.XML_DIR_NAME_TEMPLATE.format(
         batch_id=batch_id)
     xml_dir_path = os.path.join(output_dir, xml_dir_name)
@@ -80,4 +83,5 @@ def xml(
 
         shutil.copytree(working_dir, xml_dir_path)
 
-    logger.info(f'Extracting xml from batch {batch_id}.')
+    logger.info(
+        f'Finished extracting batch {batch_id} to XML.')

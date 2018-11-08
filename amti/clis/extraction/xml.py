@@ -28,5 +28,3 @@ def xml(batch_dir, output_dir):
     assignments to OUTPUT_DIR.
     """
     actions.extraction.xml(batch_dir=batch_dir, output_dir=output_dir)
-
-    logger.info('Finished extracting batch.')
