@@ -126,14 +126,13 @@ site.
            tabular  Extract data from BATCH_DIR to OUTPUT_PATH in...
            xml      Extract XML data from assignments in...
 
-     The `xml` subcommand will extract all the XML data returned by
-     Mechanical Turk into a directory of XML files:
+     The `tabular` command will extract the batch's data into an easy to
+     work with tabular format:
 
-         amti extract xml batch-* .
+         amti extract tabular batch-* batch-data.jsonl
 
-     The `.` signifies that the extracted XML should be saved in the
-     current directory. You can view the XML with the standard command
-     line tools: `ls` and `emacs`.
+     For real workflows, it would be a good idea to use the batch id in
+     the name of the output file.
 
  Now you've run a small HIT and have the results in a reproducible
  format. It's easy to tar up and upload the batch directory to the cloud
