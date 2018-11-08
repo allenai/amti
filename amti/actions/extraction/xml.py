@@ -1,4 +1,4 @@
-"""Function for extracting data from a batch"""
+"""A function for extracting data from a batch as XML"""
 
 import json
 import logging
@@ -13,7 +13,7 @@ from amti import settings
 logger = logging.getLogger(__name__)
 
 
-def extract_xml(
+def xml(
         batch_dir,
         output_dir):
     """Extract the XML from assignments in a batch.
