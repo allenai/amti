@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
     is_flag=True,
     help='Set log level to DEBUG.')
 def amti(verbose):
-    """Alexandria Mechanical Turk Interface: a CLI for MTurk."""
+    """A Mechanical Turk Interface: a CLI for MTurk."""
     log_level = logging.DEBUG if verbose else logging.INFO
     log.config_logging(log_level)
 
