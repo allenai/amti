@@ -24,6 +24,8 @@ def extract():
 
 
 subcommands = [
+    # tabular
+    clis.extraction.tabular,
     # xml
     clis.extraction.xml
 ]

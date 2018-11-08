@@ -123,7 +123,8 @@ site.
            -h, --help  Show this message and exit.
 
          Commands:
-           xml  Extract XML data from assignments in...
+           tabular  Extract data from BATCH_DIR to OUTPUT_PATH in...
+           xml      Extract XML data from assignments in...
 
      The `xml` subcommand will extract all the XML data returned by
      Mechanical Turk into a directory of XML files:
