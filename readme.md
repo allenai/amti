@@ -134,9 +134,9 @@ site.
      For real workflows, it would be a good idea to use the batch id in
      the name of the output file.
 
- Now you've run a small HIT and have the results in a reproducible
- format. It's easy to tar up and upload the batch directory to the cloud
- where you can store information from many such HITs.
+Now you've run a small HIT and have the results in a reproducible
+format. It's easy to tar up and upload the batch directory to the cloud
+where you can store information from many such HITs.
 
 [examples-directory]: ./examples/
 [worker-sandbox]: https://workersandbox.mturk.com/
@@ -231,7 +231,7 @@ HITs with `amti delete_batch`. Again, use `-h` for details.
 To use `amti` as a CLI for Mechanical Turk, [install](#installation)
 `amti` and then call it by typing `amti` at the command line:
 
-    $ amti -h
+    $ amti --help
     Usage: amti [OPTIONS] COMMAND [ARGS]...
 
       Alexandria Mechanical Turk Interface: a CLI for MTurk.
