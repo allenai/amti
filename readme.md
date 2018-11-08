@@ -24,7 +24,7 @@ Installation
 `amti` requires Python 3.6. To install `amti`, currently you should just
 install from source:
 
-    pip install -e git+https://github.com/allenai/amti#egg=amti
+    pip install git+https://github.com/allenai/amti#egg=amti
 
 `amti` is now on the path of whatever environment you installed the
 package into.
