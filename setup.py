@@ -10,7 +10,7 @@ with open('readme.md', 'r') as readme_file:
 setup(
     name='amti',
     version='0.0.1',
-    description="Alexandria's Mechanical Turk Interface",
+    description="A Mechanical Turk Interface",
     long_description=readme,
     url='http://github.com/allenai/amti',
     author='Allen Institute for Artificial Intelligence',

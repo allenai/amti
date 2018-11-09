@@ -1,6 +1,6 @@
 amti
 ====
-Alexandria's Mechanical Turk Interface (amti)
+A Mechanical Turk Interface (amti)
 
 `amti` is a CLI for Mechanical Turk that emphasizes the
 ability to quickly *iterate* on and run *reproducible* crowdsourcing

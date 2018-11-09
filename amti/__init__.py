@@ -1,1 +1,1 @@
-"""Alexandria's Mechanical Turk Interface"""
+"""A Mechanical Turk Interface"""

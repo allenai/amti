@@ -22,12 +22,12 @@ ENVS = {
 # batch directory structure and values
 
 BATCH_README = """
-This directory is a batch made by Alexandria Mechanical Turk Interface.
+This directory is a batch made by A Mechanical Turk Interface.
 
 The files in this directory represent the definition for and potentially
 the results of a batch of HITs on Amazon Mechanical Turk.
 
-See the Alexandria Mechanical Turk Interface documentation for details.
+See the A Mechanical Turk Interface documentation for details.
 """
 
 # a batch directory should have the following structure:
