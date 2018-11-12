@@ -4,29 +4,35 @@ import logging
 
 import click
 
-from amti import actions
+from amti import clis
 
 
 logger = logging.getLogger(__name__)
 
 
-@click.command(
+@click.group(
     context_settings={
         'help_option_names': ['--help', '-h']
     })
-@click.argument(
-    'batch_dir',
-    type=click.Path(exists=True, file_okay=False, dir_okay=True))
-@click.argument(
-    'output_dir',
-    type=click.Path(exists=True, file_okay=False, dir_okay=True))
-def extract_xml(batch_dir, output_dir):
-    """Extract XML data from assignments in BATCH_DIR to OUTPUT_DIR.
+def extract():
+    """Extract data from a batch to various formats.
 
-    Given a directory (BATCH_DIR) that represents a batch of HITs that
-    have been reviewed and saved, extract the XML data from the
-    assignments to OUTPUT_DIR.
+    See the subcommands for extracting batch data into a specific
+    format.
     """
-    actions.extract_xml(batch_dir=batch_dir, output_dir=output_dir)
+    pass
 
-    logger.info('Finished extracting batch.')
+
+subcommands = [
+    # tabular
+    clis.extraction.tabular,
+    # xml
+    clis.extraction.xml
+]
+
+for subcommand in subcommands:
+    extract.add_command(subcommand)
+
+
+if __name__ == '__main__':
+    extract()

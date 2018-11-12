@@ -38,12 +38,12 @@ subcommands = [
     clis.save_batch,
     # delete
     clis.delete_batch,
-    # extract xml
-    clis.extract_xml,
+    # extract (command group)
+    clis.extract,
     # create a qualification type
     clis.create_qualificationtype,
     # expire
-    clis.expire_batch,
+    clis.expire_batch
 ]
 
 for subcommand in subcommands:

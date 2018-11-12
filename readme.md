@@ -108,18 +108,35 @@ site.
      up when you examine your open HITs; however, it leaves your batch
      directory intact and unchanged.
 
-  9. Lastly, you can extract XML from all the assignments you've saved
-     into your batch directory using the following command:
+  9. Lastly, you can extract data from all the assignments you've saved
+     into your batch directory using any of the `extract` commands. To
+     view the available extraction formats, pass the `--help` option:
 
-         amti extract_xml batch-* .
+         $ amti extract --help
+         Usage: amti extract [OPTIONS] COMMAND [ARGS]...
 
-     The `.` signifies that the extracted XML should be saved in the
-     current directory. You can view the XML with the standard command
-     line tools: `ls` and `emacs`.
+           Extract data from a batch to various formats.
 
- Now you've run a small HIT and have the results in a reproducible
- format. It's easy to tar up and upload the batch directory to the cloud
- where you can store information from many such HITs.
+           See the subcommands for extracting batch data into a specific format.
+
+         Options:
+           -h, --help  Show this message and exit.
+
+         Commands:
+           tabular  Extract data from BATCH_DIR to OUTPUT_PATH in...
+           xml      Extract XML data from assignments in...
+
+     The `tabular` command will extract the batch's data into an easy to
+     work with tabular format:
+
+         amti extract tabular batch-* batch-data.jsonl
+
+     For real workflows, it would be a good idea to use the batch id in
+     the name of the output file.
+
+Now you've run a small HIT and have the results in a reproducible
+format. It's easy to tar up and upload the batch directory to the cloud
+where you can store information from many such HITs.
 
 [examples-directory]: ./examples/
 [worker-sandbox]: https://workersandbox.mturk.com/
@@ -214,7 +231,7 @@ HITs with `amti delete_batch`. Again, use `-h` for details.
 To use `amti` as a CLI for Mechanical Turk, [install](#installation)
 `amti` and then call it by typing `amti` at the command line:
 
-    $ amti -h
+    $ amti --help
     Usage: amti [OPTIONS] COMMAND [ARGS]...
 
       Alexandria Mechanical Turk Interface: a CLI for MTurk.
@@ -224,13 +241,14 @@ To use `amti` as a CLI for Mechanical Turk, [install](#installation)
       -h, --help     Show this message and exit.
 
     Commands:
-      create_batch  Create a batch of HITs using DEFINITION_DIR...
-      delete_batch  Delete the batch of HITs defined in...
-      expire_batch  Cancel (expire) a batch of open HITs defined in...
-      extract_xml   Extract XML data from assignments in...
-      review_batch  Review the batch of HITs defined in...
-      save_batch    Save results from the batch of HITs defined...
-      status_batch  View the status of the batch of HITs defined...
+      create_batch              Create a batch of HITs using DEFINITION_DIR...
+      create_qualificationtype  Create a Qualification Type using...
+      delete_batch              Delete the batch of HITs defined in...
+      expire_batch              Expire all the HITs defined in BATCH_DIR.
+      extract                   Extract data from a batch to various formats.
+      review_batch              Review the batch of HITs defined in...
+      save_batch                Save results from the batch of HITs defined...
+      status_batch              View the status of the batch of HITs defined...
 
 The CLI is self-documenting and hierarchical, so you should be able to
 find anything you might need by starting from the top and using the `-h`
