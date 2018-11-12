@@ -24,7 +24,7 @@ Installation
 `amti` requires Python 3.6. To install `amti`, currently you should just
 install from source:
 
-    pip install -e git+https://github.com/allenai/amti#egg=amti
+    pip install git+https://github.com/allenai/amti#egg=amti
 
 `amti` is now on the path of whatever environment you installed the
 package into.
@@ -57,7 +57,7 @@ site.
 
   1. Create your batch by running:
 
-         amti create_batch examples/html-question/definition examples/html-question/data.jsonl .
+         amti create-batch examples/html-question/definition examples/html-question/data.jsonl .
 
      This command creates a batch directory using the definition in
      `example/html-question/definition` and data in
@@ -69,7 +69,7 @@ site.
 
   2. Now, check the status of your batch by running:
 
-         amti status_batch batch-*
+         amti status-batch batch-*
 
      Where `batch-*` just needs to match the path to the batch directory
      that was created.
@@ -80,20 +80,20 @@ site.
 
   4. View the status of your now completed HITs with:
 
-         amti status_batch batch-*
+         amti status-batch batch-*
 
   5. (optional) If you want to cancel all the HITs in the batch:
 
-         amti expire_batch batch-*
+         amti expire-batch batch-*
 
   6. Since your batch is now ready for review, review it with:
 
-         amti review_batch batch-*
+         amti review-batch batch-*
 
   7. Once you've approved all of your HITs, you can save the results
      from the batch:
 
-         amti save_batch batch-*
+         amti save-batch batch-*
 
      If you go into the batch directory, you'll now notice that it has a
      new `results` subdirectory with the information on your HITs and
@@ -102,7 +102,7 @@ site.
   8. Since you've saved your batch, dispose of it from the MTurk site
      using:
 
-         amti delete_batch batch-*
+         amti delete-batch batch-*
 
      This action will delete the batch from MTurk so that it doesn't pop
      up when you examine your open HITs; however, it leaves your batch
@@ -123,8 +123,8 @@ site.
            -h, --help  Show this message and exit.
 
          Commands:
-           tabular  Extract data from BATCH_DIR to OUTPUT_PATH in...
-           xml      Extract XML data from assignments in...
+           tabular  Extract data from BATCH_DIR to OUTPUT_PATH in a tabular format.
+           xml      Extract XML data from assignments in BATCH_DIR to OUTPUT_DIR.
 
      The `tabular` command will extract the batch's data into an easy to
      work with tabular format:
@@ -212,15 +212,15 @@ collection of HITs generated from some data using a template.
 To create a batch, write a batch definition (see the
 [example batch definition][example-batch-definition]), create some data
 in the [JSON Lines][json-lines] format, and then create the batch using
-`amti create_batch`. Use the `-h` option for details. You can find some
+`amti create-batch`. Use the `-h` option for details. You can find some
 example data in the [`data.jsonl`][data-jsonl] file.
 
-To check on the batch's status, use `amti status_batch`. Once the batch
+To check on the batch's status, use `amti status-batch`. Once the batch
 has been fully worked by Turkers, you can manually review their work
-with `amti review_batch`. After approving or rejecting all the HITs in
+with `amti review-batch`. After approving or rejecting all the HITs in
 the batch, you can save the batch to disk with `amti
-save_batch`. Finally, after saving the batch, you can delete all of its
-HITs with `amti delete_batch`. Again, use `-h` for details.
+save-batch`. Finally, after saving the batch, you can delete all of its
+HITs with `amti delete-batch`. Again, use `-h` for details.
 
 [example-batch-definition]: ./examples/html-question/definition
 [json-lines]: http://jsonlines.org/
@@ -234,21 +234,21 @@ To use `amti` as a CLI for Mechanical Turk, [install](#installation)
     $ amti --help
     Usage: amti [OPTIONS] COMMAND [ARGS]...
 
-      Alexandria Mechanical Turk Interface: a CLI for MTurk.
+      A Mechanical Turk Interface: a CLI for MTurk.
 
     Options:
       -v, --verbose  Set log level to DEBUG.
       -h, --help     Show this message and exit.
 
     Commands:
-      create_batch              Create a batch of HITs using DEFINITION_DIR...
-      create_qualificationtype  Create a Qualification Type using...
-      delete_batch              Delete the batch of HITs defined in...
-      expire_batch              Expire all the HITs defined in BATCH_DIR.
+      create-batch              Create a batch of HITs using DEFINITION_DIR and...
+      create-qualificationtype  Create a Qualification Type using...
+      delete-batch              Delete the batch of HITs defined in BATCH_DIR.
+      expire-batch              Expire all the HITs defined in BATCH_DIR.
       extract                   Extract data from a batch to various formats.
-      review_batch              Review the batch of HITs defined in...
-      save_batch                Save results from the batch of HITs defined...
-      status_batch              View the status of the batch of HITs defined...
+      review-batch              Review the batch of HITs defined in BATCH_DIR.
+      save-batch                Save results from the batch of HITs defined in...
+      status-batch              View the status of the batch of HITs defined in...
 
 The CLI is self-documenting and hierarchical, so you should be able to
 find anything you might need by starting from the top and using the `-h`
