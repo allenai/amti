@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
     is_flag=True,
     help='Review HITs on the live MTurk site.')
 @click.option(
-    '--approve_all', '-a',
+    '--approve-all', '-a',
     is_flag=True,
     help="Approve all submissions.")
 def review_batch(batch_dir, live, approve_all):
