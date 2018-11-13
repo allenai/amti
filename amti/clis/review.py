@@ -7,7 +7,7 @@ import click
 
 from amti import actions
 from amti import settings
-from amti.utils import mturk as mturk_utils
+from amti import utils
 
 
 logger = logging.getLogger(__name__)
@@ -25,7 +25,7 @@ logger = logging.getLogger(__name__)
     is_flag=True,
     help='Review HITs on the live MTurk site.')
 @click.option(
-    '--approve_all', '-a',
+    '--approve-all', '-a',
     is_flag=True,
     help="Approve all submissions.")
 def review_batch(batch_dir, live, approve_all):
@@ -37,9 +37,9 @@ def review_batch(batch_dir, live, approve_all):
     """
     env = 'live' if live else 'sandbox'
 
-    client = mturk_utils.get_mturk_client(env)
+    client = utils.mturk.get_mturk_client(env)
 
-    actions.review_batch(
+    actions.review.review_batch(
         client=client,
         batch_dir=batch_dir,
         approve_all=approve_all)

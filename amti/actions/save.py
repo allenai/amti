@@ -7,7 +7,7 @@ import shutil
 import tempfile
 
 from amti import settings
-from amti.utils import serialization
+from amti import utils
 
 
 logger = logging.getLogger(__name__)
@@ -79,7 +79,9 @@ def save_batch(
 
             logger.debug(f'Writing HIT (ID: {hit_id}) to {hit_file_path}.')
             with open(hit_file_path, 'w') as hit_file:
-                json.dump(hit, hit_file, default=serialization.json_helper)
+                json.dump(
+                    hit,
+                    hit_file, default=utils.serialization.json_helper)
 
             hit_status = hit['HIT']['HITStatus']
             if hit_status != 'Reviewable':
@@ -107,11 +109,14 @@ def save_batch(
                             raise ValueError(
                                 f'Assignment (ID: {assignment_id}) has status'
                                 f' "{assignment_status}". In order to save a'
-                                f' batch all assignments must have "Approved" or'
-                                f' "Rejected" status.')
+                                f' batch all assignments must have "Approved"'
+                                f' or "Rejected" status.')
 
-                        assignments_file.write(json.dumps(
-                            assignment, default=serialization.json_helper) + '\n')
+                        assignments_file.write(
+                            json.dumps(
+                                assignment,
+                                default=utils.serialization.json_helper
+                            ) + '\n')
 
             logger.info(f'Finished saving HIT (ID: {hit_id}).')
 

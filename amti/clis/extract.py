@@ -4,7 +4,8 @@ import logging
 
 import click
 
-from amti import clis
+# import extraction directly to avoid a circular import
+from amti.clis import extraction
 
 
 logger = logging.getLogger(__name__)
@@ -25,9 +26,9 @@ def extract():
 
 subcommands = [
     # tabular
-    clis.extraction.tabular,
+    extraction.tabular.tabular,
     # xml
-    clis.extraction.xml
+    extraction.xml.xml
 ]
 
 for subcommand in subcommands:

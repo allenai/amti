@@ -29,21 +29,21 @@ def amti(verbose):
 
 subcommands = [
     # create
-    clis.create_batch,
+    clis.create.create_batch,
     # status
-    clis.status_batch,
+    clis.status.status_batch,
     # review
-    clis.review_batch,
+    clis.review.review_batch,
     # save
-    clis.save_batch,
+    clis.save.save_batch,
     # delete
-    clis.delete_batch,
+    clis.delete.delete_batch,
     # extract (command group)
-    clis.extract,
+    clis.extract.extract,
     # create a qualification type
-    clis.create_qualificationtype,
+    clis.create.create_qualificationtype,
     # expire
-    clis.expire_batch
+    clis.expire.expire_batch
 ]
 
 for subcommand in subcommands:

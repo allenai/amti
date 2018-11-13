@@ -27,4 +27,6 @@ def xml(batch_dir, output_dir):
     have been reviewed and saved, extract the XML data from the
     assignments to OUTPUT_DIR.
     """
-    actions.extraction.xml(batch_dir=batch_dir, output_dir=output_dir)
+    actions.extraction.xml.xml(
+        batch_dir=batch_dir,
+        output_dir=output_dir)

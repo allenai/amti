@@ -6,7 +6,7 @@ import click
 
 from amti import actions
 from amti import settings
-from amti.utils import mturk as mturk_utils
+from amti import utils
 
 
 logger = logging.getLogger(__name__)
@@ -62,9 +62,9 @@ def create_batch(definition_dir, data_path, save_dir, live):
 
     worker_url = settings.ENVS[env]['worker_url']
 
-    client = mturk_utils.get_mturk_client(env)
+    client = utils.mturk.get_mturk_client(env)
 
-    actions.create_batch(
+    actions.create.create_batch(
         client=client,
         definition_dir=definition_dir,
         data_path=data_path,
@@ -117,9 +117,9 @@ def create_qualificationtype(definition_dir, save_dir, live):
 
     requester_url = settings.ENVS[env]['requester_url']
 
-    client = mturk_utils.get_mturk_client(env)
+    client = utils.mturk.get_mturk_client(env)
 
-    actions.create_qualificationtype(
+    actions.create.create_qualificationtype(
         client=client,
         definition_dir=definition_dir,
         save_dir=save_dir)
