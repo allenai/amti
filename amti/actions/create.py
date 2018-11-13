@@ -10,9 +10,7 @@ import uuid
 import jinja2
 
 from amti import settings
-from amti.utils import log
-from amti.utils import validation
-from amti.utils import serialization
+from amti import utils
 
 
 logger = logging.getLogger(__name__)
@@ -77,7 +75,7 @@ def initialize_batch_directory(
             readme_file.write(settings.BATCH_README)
 
         # write the COMMIT file
-        current_commit = log.get_current_commit()
+        current_commit = utils.log.get_current_commit()
         commit_path = os.path.join(working_dir, commit_file_name)
         with open(commit_path, 'w') as commit_file:
             commit_file.write(current_commit)
@@ -90,7 +88,7 @@ def initialize_batch_directory(
         # validate the definition data
         with open(hittype_properties_path, 'r') as hittype_properties_file:
             hittype_properties = json.load(hittype_properties_file)
-        hittype_validation_errors = validation.validate_dict(
+        hittype_validation_errors = utils.validation.validate_dict(
             hittype_properties, settings.HITTYPE_PROPERTIES)
         if hittype_validation_errors:
             raise ValueError(
@@ -102,7 +100,7 @@ def initialize_batch_directory(
 
         with open(hit_properties_path, 'r') as hit_properties_file:
             hit_properties = json.load(hit_properties_file)
-        hit_validation_errors = validation.validate_dict(
+        hit_validation_errors = utils.validation.validate_dict(
             hit_properties, settings.HIT_PROPERTIES)
         if hit_validation_errors:
             raise ValueError(
@@ -331,7 +329,7 @@ def create_qualificationtype(
     # read in and validate the qualification type properties
     with open(properties_path, 'r') as properties_file:
         properties = json.load(properties_file)
-    properties_validation_errors = validation.validate_dict(
+    properties_validation_errors = utils.validation.validate_dict(
         properties, settings.QUALIFICATIONTYPE_PROPERTIES)
     if properties_validation_errors:
         raise ValueError(
@@ -377,7 +375,7 @@ def create_qualificationtype(
             json.dump(
                 qualificationtype_response,
                 qualificationtype_file,
-                default=serialization.json_helper)
+                default=utils.serialization.json_helper)
 
         shutil.copytree(
             working_dir,

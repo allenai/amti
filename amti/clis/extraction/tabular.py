@@ -5,8 +5,6 @@ import logging
 import click
 
 from amti import actions
-from amti.actions.extraction.tabular import (
-    TABULAR_SUPPORTED_FILE_FORMATS)
 
 
 logger = logging.getLogger(__name__)
@@ -24,7 +22,8 @@ logger = logging.getLogger(__name__)
     type=click.Path(exists=False, file_okay=True, dir_okay=False))
 @click.option(
     '--format', '-f', 'file_format',
-    type=click.Choice(TABULAR_SUPPORTED_FILE_FORMATS),
+    type=click.Choice(
+        actions.extraction.tabular.TABULAR_SUPPORTED_FILE_FORMATS),
     default='jsonl',
     help='The desired output file format.')
 def tabular(batch_dir, output_path, file_format):
@@ -37,7 +36,7 @@ def tabular(batch_dir, output_path, file_format):
     assignment metadata. By default, the table will be saved as JSON
     Lines, but other formats may be specified with the --format option.
     """
-    actions.extraction.tabular(
+    actions.extraction.tabular.tabular(
         batch_dir=batch_dir,
         output_path=output_path,
         file_format=file_format)

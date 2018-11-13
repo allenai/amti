@@ -6,7 +6,7 @@ import click
 
 from amti import actions
 from amti import settings
-from amti.utils import mturk as mturk_utils
+from amti import utils
 
 
 logger = logging.getLogger(__name__)
@@ -31,8 +31,8 @@ def delete_batch(batch_dir, live):
     """
     env = 'live' if live else 'sandbox'
 
-    client = mturk_utils.get_mturk_client(env)
+    client = utils.mturk.get_mturk_client(env)
 
-    actions.delete_batch(client=client, batch_dir=batch_dir)
+    actions.delete.delete_batch(client=client, batch_dir=batch_dir)
 
     logger.info('Finished deleting batch.')
