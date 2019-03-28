@@ -51,7 +51,9 @@ subcommands = [
     # unblock workers
     clis.unblock.unblock_workers,
     # associate qual
-    clis.associate.associate_qual
+    clis.associate.associate_qual,
+    # disassociate qual
+    clis.disassociate.disassociate_qual
 ]
 
 for subcommand in subcommands:

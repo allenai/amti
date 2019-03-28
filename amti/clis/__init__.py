@@ -5,6 +5,7 @@ from amti.clis import (
     block,
     create,
     delete,
+    disassociate,
     expire,
     extract,
     extraction,

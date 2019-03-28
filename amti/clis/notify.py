@@ -22,14 +22,14 @@ logger = logging.getLogger(__name__)
     type=str,
     nargs=-1)
 @click.option(
-    '-f', '--file',
+     '--file', '-f',
     type=click.Path(exists=True, file_okay=True, dir_okay=False),
     help="Path to file of WorkerIds to block.")
 @click.option(
-    '-s', '--subject',
+    '--subject', '-s',
     help='Subject line for message.')
 @click.option(
-    '-m', '--message',
+    '--message', '-m',
     help='Text content of message.')
 @click.option(
     '--message_file',

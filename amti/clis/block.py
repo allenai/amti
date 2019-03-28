@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
     type=str,
     nargs=-1)
 @click.option(
-    '-f', '--file',
+    '--file', '-f',
     type=click.Path(exists=True, file_okay=True, dir_okay=False),
     help="Path to file of WorkerIds to block.")
 @click.option(
@@ -34,10 +34,10 @@ logger = logging.getLogger(__name__)
     is_flag=True,
     help='View the status of HITs from the live MTurk site.')
 def block_workers(file, ids, reason, live):
-    """Block workers with ids listed in IDS or FILE.
+    """Block workers by WorkerId.
 
-    Given a space seperated list of WorkerIds (IDS), or a path to
-    a CSV of WorkerIds (FILE), create a block for each worker
+    Given a space seperated list of WorkerIds and/or a path to
+    a CSV of WorkerIds, create a block for each worker
     in the list.
 
     Parameters:

@@ -25,7 +25,6 @@ def read_workerids_from_file(file: click.Path) -> List:
 
     return worker_ids
 
-
 def get_qual_by_name(client: boto3.client, qual_name: str) -> Optional[dict]:
     """ Search for qual by qual_name. Return if found in first 100 results. """
     # NOTE: Only searches user created quals.
