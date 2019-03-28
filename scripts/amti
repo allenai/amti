@@ -43,7 +43,11 @@ subcommands = [
     # create a qualification type
     clis.create.create_qualificationtype,
     # expire
-    clis.expire.expire_batch
+    clis.expire.expire_batch,
+    # notify workers
+    clis.notify.notify_workers,
+    # block workers
+    clis.block.block_workers
 ]
 
 for subcommand in subcommands:

@@ -17,18 +17,17 @@ logger = logging.getLogger(__name__)
     context_settings={
         'help_option_names': ['--help', '-h']
     })
+@click.argument(
+    'ids',
+    type=str,
+    nargs=-1)
 @click.option(
     '-f', '--file',
-    type=click.Path(exists=True, file_okay=True, dir_okay=False))
-    help="Path to file of WorkerIds to block."
-@click.option(
-    '--ids',
-    type=str,
-    nargs=-1,
-    help="Space separated list of WorkerIds to block.")
+    type=click.Path(exists=True, file_okay=True, dir_okay=False),
+    help="Path to file of WorkerIds to block.")
 @click.option(
     '--reason', '-r',
-    default="Worker has produced low quality work, or is suspected of producing spam."
+    default="Worker has produced low quality work, or is suspected of producing spam.",
     help='Reason for blocking worker(s) (workers do not see).')
 @click.option(
     '--live', '-l',
@@ -40,26 +39,26 @@ def block_workers(file, ids, reason, live):
     Given a space seperated list of WorkerIds (IDS), or a path to
     a CSV of WorkerIds (FILE), create a block for each worker
     in the list.
+
+    Parameters:
+        - ids: Space separated list of WorkerIds to block.
     """
     env = 'live' if live else 'sandbox'
 
     client = utils.mturk.get_mturk_client(env)
 
-    worker_ids = ids
+    worker_ids = list(ids)
 
-    # read file if provided
+    # read ids from file (adds to provided ids)
     if file is not None:
-        with open(file, 'r') as f:
-            reader = csv.reader(f)
-            for worker_id in reader:
-                worker_ids.append(worker_id)
+       worker_ids += utils.workers.read_workerids_from_file(file) 
 
     # create blocks
     for worker_id in worker_ids:
+        logger.info(f'Creating block for worker {worker_id}.')
         response = client.create_worker_block(
             WorkerId=worker_id,
             Reason=reason
         )
-        logger.info(f'Created block for worker {worker_id}.')
 
     logger.info('Finished creating blocks.')
