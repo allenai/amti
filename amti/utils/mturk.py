@@ -33,6 +33,7 @@ def get_mturk_client(env):
 
     profile = os.getenv('AWS_PROFILE')
     if profile is None:
+        logger.debug('Creating mturk session with default environment/profile values.')
         session = boto3.session.Session()
     else:
         logger.debug(f'Creating mturk session with profile_name {profile}')

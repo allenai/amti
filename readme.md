@@ -283,17 +283,16 @@ install the dependencies:
     echo 'amti' > .python-version
     pip install -r requirements.txt
 
-Then, make sure that you have the proper AWS environment variables set in
-your `.envrc` file for this repo. In particular, you should have values
+Then, make sure that you have the proper [AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) set in your `.envrc` file for this repo. In particular, you should have values
 for either:
 ```
-    AWS_ACCESS_KEY_ID
-    AWS_SECRET_KEY
-    AWS_SECRET_ACCESS_KEY
+AWS_ACCESS_KEY_ID
+AWS_SECRET_KEY
+AWS_SECRET_ACCESS_KEY
 ```
 or
 ```
-    AWS_PROFILE
+AWS_PROFILE
 ```
 
 That correspond to your Mechanical Turk account.
