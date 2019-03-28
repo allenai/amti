@@ -1,7 +1,8 @@
 """ Module for worker management functions """
+import boto3
 import click
 import csv
-from typing import List
+from typing import List, Optional
 
 def create_batches(items: List, n=100) -> List:
     """ Create generator that splits items into batches of size n. """
@@ -23,3 +24,18 @@ def read_workerids_from_file(file: click.Path) -> List:
             worker_ids += row
 
     return worker_ids
+
+
+def get_qual_by_name(client: boto3.client, qual_name: str) -> Optional[dict]:
+    """ Search for qual by qual_name. Return if found in first 100 results. """
+    # NOTE: Only searches user created quals.
+    response = client.list_qualification_types(
+        Query=qual_name,
+        MustBeRequestable=True,
+        MustBeOwnedByCaller=True,
+        MaxResults=100
+    )
+    for qual in response['QualificationTypes']:
+        name = qual.pop('Name')
+        if name == qual_name:
+            return qual.pop('QualificationTypeId')
