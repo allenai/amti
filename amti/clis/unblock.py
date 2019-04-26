@@ -36,11 +36,8 @@ logger = logging.getLogger(__name__)
 def unblock_workers(file, ids, reason, live):
     """Unblock workers by WorkerId.
 
-    Given a space seperated list of WorkerIds and/or a path to
+    Given a space seperated list of WorkerIds (IDS) and/or a path to
     a CSV of WorkerIds, remove a block for each worker listed.
-
-    Parameters:
-        - ids: Space separated list of WorkerIds to block.
     """
     env = 'live' if live else 'sandbox'
 

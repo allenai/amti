@@ -2,15 +2,29 @@
 import boto3
 import click
 import csv
-from typing import List, Optional
+from typing import List
 
-def create_batches(items: List, n=100) -> List:
-    """ Create generator that splits items into batches of size n. """
+def chunk_list(items: List, n: int = 100) -> List:
+    """Create generatator that yields n sized chunks of input list."""
     for i in range(0, len(items), n):
         yield items[i:i + n]
 
 def read_workerids_from_file(file: click.Path) -> List:
-    """ Read WorkerIds from file. Return list of extracted WorkerIds. """
+    """Read WorkerIds from file.
+    
+    Read WorkerIds from CSV file. Return list of extracted WorkerIds.
+
+    Parameters
+    ----------
+    file : click.Path
+        Path to CSV file of WorkerIds.
+
+    Returns
+    -------
+    list
+        List of extracted WorkerId strings.
+        
+    """
     worker_ids = []
     with open(file, 'r') as f:
         reader = csv.reader(f)
@@ -24,17 +38,3 @@ def read_workerids_from_file(file: click.Path) -> List:
             worker_ids += row
 
     return worker_ids
-
-def get_qual_by_name(client: boto3.client, qual_name: str) -> Optional[dict]:
-    """ Search for qual by qual_name. Return if found in first 100 results. """
-    # NOTE: Only searches user created quals.
-    response = client.list_qualification_types(
-        Query=qual_name,
-        MustBeRequestable=True,
-        MustBeOwnedByCaller=True,
-        MaxResults=100
-    )
-    for qual in response['QualificationTypes']:
-        name = qual.pop('Name')
-        if name == qual_name:
-            return qual.pop('QualificationTypeId')

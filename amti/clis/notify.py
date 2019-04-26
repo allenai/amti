@@ -42,12 +42,8 @@ logger = logging.getLogger(__name__)
 def notify_workers(file, ids, subject, message, message_file, live):
     """Send notification message to workers.
 
-    Given a space seperated list of WorkerIds, or a path to
-    a CSV of WorkerIds, send a notification to each worker
-    listed. 
-
-    Parameters:
-        - ids: Space separated list of WorkerIds to block.
+    Given a space seperated list of WorkerIds (IDS), or a path to
+    a CSV of WorkerIds, send a notification to each worker. 
     """
     env = 'live' if live else 'sandbox'
 
@@ -68,15 +64,15 @@ def notify_workers(file, ids, subject, message, message_file, live):
     if any(val is None for val in message.values()):
         raise ValueError('Missing Message or Subject value.')
 
-    # break ids into batches of 100, notify each batch
-    for batch_ids in utils.workers.create_batches(worker_ids):
+    # break ids into chunks of 100, notify workers in each chunk
+    for chunk_ids in utils.workers.chunk_list(worker_ids):
 
-        logger.info(f"Sending notification to workers: {batch_ids}")
+        logger.info(f"Sending notification to workers: {chunk_ids}")
 
         response = client.notify_workers(
             Subject=message['Subject'],
             MessageText=message['MessageText'],
-            WorkerIds=batch_ids
+            WorkerIds=chunk_ids
         ) 
 
         for failure in response['NotifyWorkersFailureStatuses']:

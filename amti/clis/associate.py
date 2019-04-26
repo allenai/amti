@@ -46,13 +46,10 @@ logger = logging.getLogger(__name__)
 def associate_qual(file, ids, qual, name, value, notify, live):
     """Associate workers with a qualification.
 
-    Given a space seperated list of WorkerIds and/or a path to
-    a CSV of WorkerIds, associate each worker with a qualification.
+    Given a space seperated list of WorkerIds (IDS) and/or a path to
+    a CSV of WorkerIds, associate each worker with a qualification (QUAL).
 
     NOTE: Only works with quals that both exist and are owned by the user.
-
-    Parameters:
-        - ids: Space separated list of WorkerIds.
     """
     env = 'live' if live else 'sandbox'
 
@@ -67,7 +64,7 @@ def associate_qual(file, ids, qual, name, value, notify, live):
     # set qual_id
     qual_id = qual
     if name:
-        qual_id = utils.workers.get_qual_by_name(client, qual)
+        qual_id = utils.mturk.get_qual_by_name(client, qual)
         if qual_id is None:
             raise ValueError(f"No qual with name {qual} found.")
 

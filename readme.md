@@ -241,14 +241,19 @@ To use `amti` as a CLI for Mechanical Turk, [install](#installation)
       -h, --help     Show this message and exit.
 
     Commands:
+      associate-qual            Associate workers with a qualification.
+      block-workers             Block workers by WorkerId.
       create-batch              Create a batch of HITs using DEFINITION_DIR and...
       create-qualificationtype  Create a Qualification Type using...
       delete-batch              Delete the batch of HITs defined in BATCH_DIR.
+      disassociate-qual         Disassociate workers with a qualification.
       expire-batch              Expire all the HITs defined in BATCH_DIR.
       extract                   Extract data from a batch to various formats.
+      notify-workers            Send notification message to workers.
       review-batch              Review the batch of HITs defined in BATCH_DIR.
       save-batch                Save results from the batch of HITs defined in...
       status-batch              View the status of the batch of HITs defined in...
+      unblock-workers           Unblock workers by WorkerId.
 
 The CLI is self-documenting and hierarchical, so you should be able to
 find anything you might need by starting from the top and using the `-h`
