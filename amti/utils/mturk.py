@@ -1,6 +1,7 @@
 """Utilities for interacting with MTurk."""
 
 import logging
+import os
 import boto3
 
 from typing import Optional
@@ -29,10 +30,18 @@ def get_mturk_client(env):
     region_name = settings.ENVS[env]['region_name']
     endpoint_url = settings.ENVS[env]['endpoint_url']
 
+    profile = os.getenv('AWS_PROFILE')
+    if profile is None:
+        logger.debug('Creating mturk session with default environment/profile values.')
+        session = boto3.session.Session()
+    else:
+        logger.debug(f'Creating mturk session with profile_name {profile}')
+        session = boto3.session.Session(profile_name=profile)
+
     logger.debug(
         f'Creating mturk client in region {region_name} with endpoint'
         f' {endpoint_url}.')
-    client = boto3.client(
+    client = session.client(
         service_name='mturk',
         region_name=region_name,
         endpoint_url=endpoint_url)
