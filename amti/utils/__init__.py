@@ -5,4 +5,5 @@ from amti.utils import (
     mturk,
     serialization,
     validation,
+    workers,
     xml)
