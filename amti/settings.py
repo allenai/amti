@@ -1,6 +1,12 @@
 """Constants and default settings that ship with ``amti``"""
 
 
+# AWS client configuration
+
+MAX_ATTEMPTS = 25
+"""The number of retries to perform for requests."""
+
+
 # Mechanical Turk environment values
 
 ENVS = {
