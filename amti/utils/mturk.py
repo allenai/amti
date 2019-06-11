@@ -9,7 +9,9 @@ from typing import Optional
 
 from amti import settings
 
+
 logger = logging.getLogger(__name__)
+
 
 def get_mturk_client(env):
     """Return a client for Mechanical Turk.
@@ -42,7 +44,7 @@ def get_mturk_client(env):
     logger.debug(
         f'Creating mturk client in region {region_name} with endpoint'
         f' {endpoint_url}.')
-    config = Config(retries = dict(max_attempts=30))
+    config = Config(retries={'max_attempts': settings.MAX_ATTEMPTS})
     client = session.client(
         service_name='mturk',
         region_name=region_name,
@@ -52,21 +54,22 @@ def get_mturk_client(env):
 
     return client
 
+
 def get_qual_by_name(client: boto3.client, qual_name: str) -> Optional[dict]:
     """Find qual by name.
-    
+
     Search MTurk qualifications for qual with qual_name. Return if found in
     first 100 results.
-    
+
     NOTE: Only searches quals created/owned by the user's MTurk account.
-    
+
     Parameters
     ----------
     client : boto3.client
         Boto3 MTurk client.
     qual_name : str
         Name of qualification to search for.
-    
+
     Returns
     -------
     dict or None
