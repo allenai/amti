@@ -3,6 +3,7 @@
 import logging
 import os
 import boto3
+from botocore.config import Config
 
 from typing import Optional
 
@@ -41,10 +42,13 @@ def get_mturk_client(env):
     logger.debug(
         f'Creating mturk client in region {region_name} with endpoint'
         f' {endpoint_url}.')
+    config = Config(retries = dict(max_attempts=30))
     client = session.client(
         service_name='mturk',
         region_name=region_name,
-        endpoint_url=endpoint_url)
+        endpoint_url=endpoint_url,
+        config=config
+    )
 
     return client
 
