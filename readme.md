@@ -213,7 +213,7 @@ To create a batch, write a batch definition (see the
 [example batch definition][example-batch-definition]), create some data
 in the [JSON Lines][json-lines] format, and then create the batch using
 `amti create-batch`. Use the `-h` option for details. You can find some
-example data in the [`data.jsonl`][data-jsonl] file.
+example data in the [`data.jsonl`][examples/html-question/data.jsonl] file.
 
 To check on the batch's status, use `amti status-batch`. Once the batch
 has been fully worked by Turkers, you can manually review their work
