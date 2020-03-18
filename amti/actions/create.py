@@ -268,7 +268,8 @@ def create_batch(
 
     Returns
     -------
-    None
+    str
+        the path to the batch directory.
     """
     logger.info('Writing batch.')
 
@@ -284,6 +285,8 @@ def create_batch(
         batch_dir=batch_dir)
 
     logger.info('HIT Creation Complete.')
+
+    return batch_dir
 
 
 def create_qualificationtype(

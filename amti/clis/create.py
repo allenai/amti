@@ -64,14 +64,14 @@ def create_batch(definition_dir, data_path, save_dir, live):
 
     client = utils.mturk.get_mturk_client(env)
 
-    actions.create.create_batch(
+    batch_dir = actions.create.create_batch(
         client=client,
         definition_dir=definition_dir,
         data_path=data_path,
         save_dir=save_dir)
 
     logger.info(
-        f'Finished.'
+        f'Finished creating batch directory: {batch_dir}.'
         f'\n'
         f'\n    Preview HITs: {worker_url}'
         f'\n')
