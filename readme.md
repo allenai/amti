@@ -224,7 +224,7 @@ HITs with `amti delete-batch`. Again, use `-h` for details.
 
 [example-batch-definition]: ./examples/html-question/definition
 [json-lines]: http://jsonlines.org/
-[data-jsonl]: ./examples/test/data.jsonl
+[data-jsonl]: ./examples/html-question/data.jsonl
 
 ### Command Line Interface
 
