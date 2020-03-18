@@ -284,6 +284,8 @@ def create_batch(
         batch_dir=batch_dir)
 
     logger.info('HIT Creation Complete.')
+    
+    return batch_dir
 
 
 def create_qualificationtype(
