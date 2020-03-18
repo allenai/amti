@@ -75,7 +75,7 @@ def initialize_batch_directory(
             readme_file.write(settings.BATCH_README)
 
         # write the COMMIT file
-        current_commit = utils.log.get_current_commit()
+        current_commit = utils.log.get_current_commit() or '<none>'
         commit_path = os.path.join(working_dir, commit_file_name)
         with open(commit_path, 'w') as commit_file:
             commit_file.write(current_commit)
