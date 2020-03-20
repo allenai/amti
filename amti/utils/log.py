@@ -87,7 +87,7 @@ def get_current_commit():
 
     if not git_installed:
         current_commit = None
-    elif b'fatal: Not a git repository' in process.stderr:
+    elif b'fatal: not a git repository' in process.stderr.lower():
         current_commit = None
     else:
         process.check_returncode()
@@ -120,7 +120,7 @@ def is_repo_clean():
 
     if not git_installed:
         clean_repo = None
-    elif b'fatal: Not a git repository' in process.stderr:
+    elif b'fatal: not a git repository' in process.stderr.lower():
         clean_repo = None
     else:
         process.check_returncode()
