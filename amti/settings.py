@@ -24,6 +24,9 @@ ENVS = {
     }
 }
 
+# MTURK overhead multiplier
+TURK_OVERHEAD_FACTOR = 1.2
+
 
 # batch directory structure and values
 
