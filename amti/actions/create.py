@@ -172,14 +172,6 @@ def estimate_batch_cost(batch_dir):
         batch_dir,
         definition_dir_name,
         hit_properties_file_name)
-    hittype_properties_path = os.path.join(
-        batch_dir,
-        definition_dir_name,
-        hittype_properties_file_name)
-    hit_properties_path = os.path.join(
-        batch_dir,
-        definition_dir_name,
-        hit_properties_file_name)
     data_path = os.path.join(
         batch_dir, data_file_name)
 
