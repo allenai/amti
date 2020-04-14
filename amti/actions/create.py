@@ -184,14 +184,13 @@ def estimate_batch_cost(batch_dir):
         hit_properties = json.load(hit_properties_file)
 
     with open(data_path, "r") as data_file:
-        num_of_hits = len([line for line in data_file
-                           if line.strip()])
+        n_hits = sum(1 for ln in data_file if ln.strip() != '')
 
     # Estimate cost
 
     estimated_cost = float(hittype_properties["Reward"]) * \
         int(hit_properties["MaxAssignments"]) * \
-        num_of_hits * \
+        n_hits * \
         settings.TURK_OVERHEAD_FACTOR
 
     return estimated_cost
