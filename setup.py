@@ -13,8 +13,8 @@ setup(
     description="A Mechanical Turk Interface",
     long_description=readme,
     url='http://github.com/allenai/amti',
-    author='Allen Institute for Artificial Intelligence',
-    author_email='alexandria@allenai.org',
+    author='Nicholas Lourie',
+    author_email='nicholasl@allenai.org',
     keywords='amti mechanical turk mturk crowdsourcing',
     classifiers=[
         'Development Status :: 3 - Alpha',
