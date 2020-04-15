@@ -138,6 +138,13 @@ Now you've run a small HIT and have the results in a reproducible
 format. It's easy to tar up and upload the batch directory to the cloud
 where you can store information from many such HITs.
 
+When developing your own `HTMLQuestion` HITs, you may want to preview
+them locally before uploading to Mechanical Turk, with the
+`preview-batch` command:
+
+    amti preview-batch /path/to/definition/directory /path/to/data/file
+
+
 [examples-directory]: ./examples/
 [worker-sandbox]: https://workersandbox.mturk.com/
 
@@ -289,17 +296,18 @@ install the dependencies:
     echo 'amti' > .python-version
     pip install -r requirements.txt
 
-Then, make sure that you have the proper [AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html) set in your `.envrc` file for this repo. In particular, you should have values
+Then, make sure that you have the proper
+[AWS environment variables](https://docs.aws.amazon.com/cli/latest/userguide/cli-configure-envvars.html)
+set in your `.envrc` file for this repo. In particular, you should have values
 for either:
-```
-AWS_ACCESS_KEY_ID
-AWS_SECRET_KEY
-AWS_SECRET_ACCESS_KEY
-```
+
+    AWS_ACCESS_KEY_ID
+    AWS_SECRET_KEY
+    AWS_SECRET_ACCESS_KEY
+
 or
-```
-AWS_PROFILE
-```
+
+    AWS_PROFILE
 
 That correspond to your Mechanical Turk account.
 
