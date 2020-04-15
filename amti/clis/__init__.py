@@ -13,5 +13,6 @@ from amti.clis import (
     review,
     save,
     status,
-    unblock
+    unblock,
+    preview
 )

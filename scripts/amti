@@ -53,7 +53,9 @@ subcommands = [
     # associate qual
     clis.associate.associate_qual,
     # disassociate qual
-    clis.disassociate.disassociate_qual
+    clis.disassociate.disassociate_qual,
+    # preview
+    clis.preview.preview_batch
 ]
 
 for subcommand in subcommands:
