@@ -26,19 +26,14 @@ logger = logging.getLogger(__name__)
     'save_dir',
     type=click.Path(exists=True, file_okay=False, dir_okay=True))
 @click.option(
+    '--check-cost/--no-check-cost', '-c/-n',
+    default=True,
+    help="Whether to prompt for cost approval before uploading the batch.")
+@click.option(
     '--live', '-l',
     is_flag=True,
     help='Create HITs on the live MTurk site.')
-@click.option(
-    '--verify',
-    is_flag=True,
-    help='Always verify costs.')
-@click.option(
-    '--force', '-f',
-    is_flag=True,
-    help='Do not verify hit costs.')
-
-def create_batch(definition_dir, data_path, save_dir, live, verify, force):
+def create_batch(definition_dir, data_path, save_dir, check_cost, live):
     """Create a batch of HITs using DEFINITION_DIR and DATA_PATH.
 
     Create a batch of HITs using DEFINITION_DIR and DATA_PATH, and then
@@ -73,14 +68,12 @@ def create_batch(definition_dir, data_path, save_dir, live, verify, force):
 
     client = utils.mturk.get_mturk_client(env)
 
-    verify_cost_before_upload = verify or (live and (not force))
-
     batch_dir, upload_flag = actions.create.create_batch(
         client=client,
         definition_dir=definition_dir,
         data_path=data_path,
         save_dir=save_dir,
-        verify_cost_before_upload=verify_cost_before_upload)
+        verify_cost_before_upload=check_cost)
 
     preview_message = f'Preview HITs: {worker_url}' if upload_flag \
         else "HITs were not uploaded."
