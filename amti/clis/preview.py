@@ -1,32 +1,31 @@
-"""CLI for running a simple web server to preview HIT"""
+"""CLI for running a web server to preview HITs"""
 
-import os
+from http import server
 import json
-from http.server import BaseHTTPRequestHandler, HTTPServer
+import os
 from urllib.parse import urlparse
 
 import click
 import jinja2
 
-from amti import actions
 from amti import settings
-from amti import utils
 
 
-class MyServer(HTTPServer):
+class Server(server.HTTPServer):
     def __init__(
         self,
         server_address,
-        RequestHandlerClass,
+        request_handler_class,
         template_path=None,
         data_path=None,
     ):
-        super().__init__(server_address, RequestHandlerClass)
+        super().__init__(server_address, request_handler_class)
+
         self.template_path = template_path
         self.data_path = data_path
 
 
-class MyHandler(BaseHTTPRequestHandler):
+class Handler(server.BaseHTTPRequestHandler):
     def _set_headers(self):
         self.send_response(200)
         self.send_header('Content-type', 'text/html')
@@ -58,8 +57,8 @@ def run(
     template_path,
     data_path,
     port,
-    server_class=MyServer,
-    handler_class=MyHandler,
+    server_class=Server,
+    handler_class=Handler,
 ):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class, template_path=template_path, data_path=data_path)
