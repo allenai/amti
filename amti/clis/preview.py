@@ -2,6 +2,7 @@
 
 from http import server
 import json
+import logging
 import os
 from urllib.parse import urlparse
 
@@ -9,6 +10,9 @@ import click
 import jinja2
 
 from amti import settings
+
+
+logger = logging.getLogger(__name__)
 
 
 class Server(server.HTTPServer):
