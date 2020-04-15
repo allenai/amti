@@ -26,10 +26,14 @@ logger = logging.getLogger(__name__)
     'save_dir',
     type=click.Path(exists=True, file_okay=False, dir_okay=True))
 @click.option(
+    '--check-cost/--no-check-cost', '-c/-n',
+    default=True,
+    help="Whether to prompt for cost approval before uploading the batch.")
+@click.option(
     '--live', '-l',
     is_flag=True,
     help='Create HITs on the live MTurk site.')
-def create_batch(definition_dir, data_path, save_dir, live):
+def create_batch(definition_dir, data_path, save_dir, check_cost, live):
     """Create a batch of HITs using DEFINITION_DIR and DATA_PATH.
 
     Create a batch of HITs using DEFINITION_DIR and DATA_PATH, and then
@@ -63,6 +67,20 @@ def create_batch(definition_dir, data_path, save_dir, live):
     worker_url = settings.ENVS[env]['worker_url']
 
     client = utils.mturk.get_mturk_client(env)
+
+    estimated_cost = actions.create.estimate_batch_cost(
+        definition_dir, data_path)
+
+    logger.info(
+        f'The estimated cost for this batch is ~{estimated_cost:.2f} USD.')
+
+    if check_cost:
+        cost_approved = click.confirm(
+            f'Approve cost (~{estimated_cost:.2f} USD) and upload?')
+        if not cost_approved:
+            logger.info(
+                'The batch cost was not approved. Aborting batch creation.')
+            return
 
     batch_dir = actions.create.create_batch(
         client=client,

@@ -140,6 +140,62 @@ def initialize_batch_directory(
     return batch_dir
 
 
+def estimate_batch_cost(definition_dir, data_path):
+    """
+    Estimate the cost of a batch.
+
+    This function takes ``definition_dir`` and ``data_path`` strings and then
+    estimates the cost of a batch created with them. Since this function takes
+    the defintion directory and data file, it can estimate the cost of a batch
+    either before or after it's created.
+
+    Parameters
+    ----------
+    definition_dir : str
+        the path to the batch's definition directory.
+    data_path : str
+        the path to the batch's data file.
+
+    Returns
+    -------
+    float
+        the estimated cost of uploading this batch to MTURK (in USD),
+        including MTURK overhead.
+    """
+    # construct all necessary paths
+    _, definition_dir_subpaths = settings.BATCH_DIR_STRUCTURE[1]['definition']
+    hittype_properties_file_name, _ = \
+        definition_dir_subpaths['hittype_properties']
+    hit_properties_file_name, _ = definition_dir_subpaths['hit_properties']
+
+    hittype_properties_path = os.path.join(
+        definition_dir,
+        hittype_properties_file_name)
+    hit_properties_path = os.path.join(
+        definition_dir,
+        hit_properties_file_name)
+
+    # Load relevant files
+
+    with open(hittype_properties_path, 'r') as hittype_properties_file:
+        hittype_properties = json.load(hittype_properties_file)
+
+    with open(hit_properties_path, 'r') as hit_properties_file:
+        hit_properties = json.load(hit_properties_file)
+
+    with open(data_path, "r") as data_file:
+        n_hits = sum(1 for ln in data_file if ln.strip() != '')
+
+    # Estimate cost
+
+    estimated_cost = float(hittype_properties["Reward"]) \
+        * int(hit_properties["MaxAssignments"]) \
+        * n_hits \
+        * settings.TURK_OVERHEAD_FACTOR
+
+    return estimated_cost
+
+
 def upload_batch(
         client,
         batch_dir):
@@ -280,9 +336,7 @@ def create_batch(
 
     logger.info('Uploading batch to MTurk.')
 
-    ids = upload_batch(
-        client=client,
-        batch_dir=batch_dir)
+    ids = upload_batch(client=client, batch_dir=batch_dir)
 
     logger.info('HIT Creation Complete.')
 
