@@ -140,14 +140,21 @@ def initialize_batch_directory(
     return batch_dir
 
 
-def estimate_batch_cost(batch_dir):
+def estimate_batch_cost(definition_dir, data_path):
     """
-    Estimate the cost of the given batch.
+    Estimate the cost of a batch.
+
+    This function takes ``definition_dir`` and ``data_path`` strings and then
+    estimates the cost of a batch created with them. Since this function takes
+    the defintion directory and data file, it can estimate the cost of a batch
+    either before or after it's created.
 
     Parameters
     ----------
-    batch_dir : str
-        the path to the batch directory.
+    definition_dir : str
+        the path to the batch's definition directory.
+    data_path : str
+        the path to the batch's data file.
 
     Returns
     -------
@@ -156,24 +163,17 @@ def estimate_batch_cost(batch_dir):
         including MTURK overhead.
     """
     # construct all necessary paths
-    _, batch_dir_subpaths = settings.BATCH_DIR_STRUCTURE
-    definition_dir_name, definition_dir_subpaths = \
-        batch_dir_subpaths['definition']
+    _, definition_dir_subpaths = settings.BATCH_DIR_STRUCTURE[1]['definition']
     hittype_properties_file_name, _ = \
         definition_dir_subpaths['hittype_properties']
     hit_properties_file_name, _ = definition_dir_subpaths['hit_properties']
-    data_file_name, _ = batch_dir_subpaths['data']
 
     hittype_properties_path = os.path.join(
-        batch_dir,
-        definition_dir_name,
+        definition_dir,
         hittype_properties_file_name)
     hit_properties_path = os.path.join(
-        batch_dir,
-        definition_dir_name,
+        definition_dir,
         hit_properties_file_name)
-    data_path = os.path.join(
-        batch_dir, data_file_name)
 
     # Load relevant files
 
@@ -188,10 +188,10 @@ def estimate_batch_cost(batch_dir):
 
     # Estimate cost
 
-    estimated_cost = float(hittype_properties["Reward"]) * \
-        int(hit_properties["MaxAssignments"]) * \
-        n_hits * \
-        settings.TURK_OVERHEAD_FACTOR
+    estimated_cost = float(hittype_properties["Reward"]) \
+        * int(hit_properties["MaxAssignments"]) \
+        * n_hits \
+        * settings.TURK_OVERHEAD_FACTOR
 
     return estimated_cost
 
@@ -307,8 +307,7 @@ def create_batch(
         client,
         definition_dir,
         data_path,
-        save_dir,
-        verify_cost_before_upload):
+        save_dir):
     """Create a batch, writing it to disk and uploading it to MTurk.
 
     Parameters
@@ -322,16 +321,11 @@ def create_batch(
         generate the HITs in the batch.
     save_dir : str
         the path to the directory in which to write the batch directory.
-    verify_cost_before_upload : bool
-        controls whether to display cost and prompt user's verification prior
-        to uploading.
 
     Returns
     -------
     str
         the path to the batch directory.
-    bool
-        whether this batch was uploaded to Mturk.
     """
     logger.info('Writing batch.')
 
@@ -340,36 +334,13 @@ def create_batch(
         data_path=data_path,
         save_dir=save_dir)
 
-    approve_costs = None
-    if verify_cost_before_upload:
-        # Calculate estimated costs and prompt user to verify
-        estimated_cost = estimate_batch_cost(batch_dir)
-        print("The estimated cost for this batch is {cost} USD.".format(
-            cost=estimated_cost))
+    logger.info('Uploading batch to MTurk.')
 
-        while approve_costs is None:
-            user_input = input('Approve cost and upload? [y/n]').strip().lower()
-            if user_input in ['y', 'n']:
-                approve_costs = user_input == 'y'
-            else:
-                print('Please type either "y" or "n".')
+    ids = upload_batch(client=client, batch_dir=batch_dir)
 
-    # Indicate if this batch should be uploaded
-    upload_flag = (not verify_cost_before_upload) or approve_costs
+    logger.info('HIT Creation Complete.')
 
-    if upload_flag:
-        logger.info('Uploading batch to MTurk.')
-
-        ids = upload_batch(
-            client=client,
-            batch_dir=batch_dir)
-
-        logger.info('HIT Creation Complete.')
-
-    else:
-        logger.info("Did not upload batch to Mturk")
-
-    return batch_dir, upload_flag
+    return batch_dir
 
 
 def create_qualificationtype(

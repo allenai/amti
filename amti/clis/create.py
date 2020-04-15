@@ -68,20 +68,30 @@ def create_batch(definition_dir, data_path, save_dir, check_cost, live):
 
     client = utils.mturk.get_mturk_client(env)
 
-    batch_dir, upload_flag = actions.create.create_batch(
+    estimated_cost = actions.create.estimate_batch_cost(
+        definition_dir, data_path)
+
+    logger.info(
+        f'The estimated cost for this batch is ~{estimated_cost:.2f} USD.')
+
+    if check_cost:
+        cost_approved = click.confirm(
+            f'Approve cost (~{estimated_cost:.2f} USD) and upload?')
+        if not cost_approved:
+            logger.info(
+                'The batch cost was not approved. Aborting batch creation.')
+            return
+
+    batch_dir = actions.create.create_batch(
         client=client,
         definition_dir=definition_dir,
         data_path=data_path,
-        save_dir=save_dir,
-        verify_cost_before_upload=check_cost)
-
-    preview_message = f'Preview HITs: {worker_url}' if upload_flag \
-        else "HITs were not uploaded."
+        save_dir=save_dir)
 
     logger.info(
         f'Finished creating batch directory: {batch_dir}.'
         f'\n'
-        f'\n    {preview_message}'
+        f'\n    Preview HITs: {worker_url}'
         f'\n')
 
 
