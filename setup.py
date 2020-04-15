@@ -1,6 +1,6 @@
-"""setup.py file for packaging ``amti``"""
+"""setup.py file for packaging amti."""
 
-from setuptools import setup, find_packages
+from setuptools import setup
 
 
 with open('readme.md', 'r') as readme_file:
@@ -25,11 +25,11 @@ setup(
         'Topic :: Scientific/Engineering :: Artificial Intelligence'
     ],
     license='Apache',
-    packages=find_packages(),
+    packages=['amti'],
     install_requires=[
-        'boto3 >= 1.5.29',
-        'click >= 6.7',
-        'Jinja2 >= 2.10'
+        'Jinja2 >= 2.11.2',
+        'boto3 >= 1.12.39',
+        'click >= 7.1.1'
     ],
     python_requires='>=3.6',
     scripts=[
