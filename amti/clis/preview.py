@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+from xml.etree import ElementTree
 
 import click
 import jinja2
@@ -32,7 +33,18 @@ class Server(server.HTTPServer):
         self.data_path = data_path
 
         with open(self.template_path, 'r') as template_file:
-            self.template = jinja2.Template(template_file.read())
+            template_xml = ElementTree.fromstring(template_file.read())
+            html_content = template_xml.find(
+                'mturk:HTMLContent',
+                {'mturk': 'http://mechanicalturk.amazonaws.com/AWSMechanicalTurkDataSchemas/2011-11-11/HTMLQuestion.xsd'}
+            )
+            if html_content is None:
+                raise ValueError(
+                    'The preview server can only preview HTMLQuestion HITs.')
+
+            html_template_string = html_content.text
+
+            self.template = jinja2.Template(html_template_string)
 
         with open(self.data_path, 'r') as data_file:
             self.data = [json.loads(ln) for ln in data_file]
@@ -120,7 +132,7 @@ class Handler(server.BaseHTTPRequestHandler):
     '--port', type=int, default=8000,
     help='The port on which to run the server. Defaults to 8000.')
 def preview_batch(definition_dir, data_path, port):
-    """Preview the HITs from DEFINITION_DIR and DATA_PATH.
+    """Preview HTMLQuestion HITs based on DEFINITION_DIR and DATA_PATH.
 
     Run a web server that previews the HITs defined by DEFINITION_DIR
     and DATA_PATH. The HIT corresponding to each row of the data file
