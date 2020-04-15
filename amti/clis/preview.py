@@ -57,18 +57,6 @@ class Handler(server.BaseHTTPRequestHandler):
                     break
         self.wfile.write(question_template.render(**ln_data).encode())
 
-def run(
-    template_path,
-    data_path,
-    port,
-    server_class=Server,
-    handler_class=Handler,
-):
-    server_address = ('', port)
-    httpd = server_class(server_address, handler_class, template_path=template_path, data_path=data_path)
-    print(f"Starting server on port {port}...")
-    httpd.serve_forever()
-
 
 @click.command(
     context_settings={
@@ -96,8 +84,25 @@ def preview_batch(definition_dir, data_path, port):
     For example, for row 2, visit <http://localhost:8000/?id=2>.
 
     """
-    run(
-        template_path=os.path.join(definition_dir, 'question.xml.j2'),
-        data_path=data_path,
-        port=port,
-    )
+    # Construct the template path.
+    _, batch_dir_subpaths = settings.BATCH_DIR_STRUCTURE
+    _, definition_dir_subpaths = \
+        batch_dir_subpaths['definition']
+    template_file_name, _ = definition_dir_subpaths['question_template']
+
+    template_path = os.path.join(definition_dir, template_file_name)
+
+    # Instantiate the HIT preview server.
+    httpd = Server(
+        server_address=('', port),
+        request_handler_class=Handler,
+        template_path=template_path,
+        data_path=data_path)
+
+    # Run the server.
+    logger.info(
+        f'\n'
+        f'\n    Running HIT preview server on port {port}.'
+        f'\n')
+
+    httpd.serve_forever()
