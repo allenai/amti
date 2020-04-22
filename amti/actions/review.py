@@ -28,7 +28,7 @@ def review_hit(
 
     Returns
     -------
-    None.
+    List of marked assignments.
     """
     logger.debug(f'Fetching HIT (ID: {hit_id}).')
 
@@ -44,6 +44,7 @@ def review_hit(
 
     assignments_paginator = client.get_paginator(
         'list_assignments_for_hit')
+    marked_assignments = []
     assignments_pages = assignments_paginator.paginate(HITId=hit_id)
     for i, assignments_page in enumerate(assignments_pages):
         logger.debug(f'Reviewing assignments. Page {i}.')
@@ -82,11 +83,11 @@ def review_hit(
 
                     approve = None
                     while approve is None:
-                        user_input = input('Approve? [y/n]').strip().lower()
-                        if user_input in ['y', 'n']:
+                        user_input = input('Approve? [y/n] or Mark for rejection [r]').strip().lower()
+                        if user_input in ['y', 'n', 'r']:
                             approve = user_input == 'y'
                         else:
-                            print('Please type either "y" or "n".')
+                            print('Please type either "y", "n", or "r".')
 
                     if approve:
                         logger.info(f'Approving assignment (ID: {assignment_id}).')
@@ -94,10 +95,13 @@ def review_hit(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
                     else:
+                        marked_assignments.append([assignment_id, user_input])
                         logger.info(
                             f'Did not approve assignment (ID: {assignment_id}).'
-                            f' Please make sure to manually reject it.')
+                            f' Marked for manual review or rejection.')
 
+
+    return marked_assignments
 
 def review_batch(
         client,
@@ -126,6 +130,8 @@ def review_batch(
         batch_dir, batchid_file_name)
     incomplete_file_path = os.path.join(
         batch_dir, settings.INCOMPLETE_FILE_NAME)
+    marked_file_path = os.path.join(
+        batch_dir, 'marked_assignments.json')
 
     with open(batchid_file_path) as batchid_file:
         batch_id = batchid_file.read().strip()
@@ -140,7 +146,12 @@ def review_batch(
 
     logger.info(f'Reviewing batch {batch_id}.')
 
+    marked_assignments = []
     for hit_id in hit_ids:
-        review_hit(client=client, hit_id=hit_id, approve_all=approve_all)
+        marked_assignments.extend(review_hit(client=client, hit_id=hit_id, approve_all=approve_all))
+
+    if marked_assingments:
+        with open(marked_file_path, 'w') as f:
+            json.dump(data, f)  
 
     logger.info(f'Review of batch {batch_id} is complete.')
