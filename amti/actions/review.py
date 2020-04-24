@@ -81,24 +81,40 @@ def review_hit(
                             assignment_id=assignment_id,
                             answers=answers_xml.toprettyxml()))
 
-                    approve = None
-                    while approve is None:
-                        user_input = input('Approve? [y/n] or Mark for rejection [r]').strip().lower()
-                        if user_input in ['y', 'n', 'r']:
-                            approve = user_input == 'y'
+                    input_string = """Would you like to (a)ccept, (r)eject, (s)kip or
+                        (m)ark the assignment? [a/r/s/m]:"""
+                    while True:
+                        user_input = input(input_string).strip().lower()
+                        if user_input in ['a', 'r', 's']:
+                            break
+                        elif user_input == 'm':
+                            print('Assignment marked.')
+                            while True:
+                                user_input = input('Would you like to (a)ccept, (r)eject, or (s)kip this assignment?').strip().lower()
+                                if user_input in ['a', 'r', 's']:
+                                    break
+                            marked_reason = input('Reason for marking? (Can be left blank.)').strip()
+                            marked_assignments.append([assignment_id, user_input, marked_reason])
                         else:
-                            print('Please type either "y", "n", or "r".')
+                            print('Please type either "a", "r", "s", or "m".')
 
-                    if approve:
+                    if user_input == 'a':  # accept
                         logger.info(f'Approving assignment (ID: {assignment_id}).')
                         client.approve_assignment(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
+                    elif user_input == 'r':
+                        while True:
+                            user_input = input('Confirm rejection of this assignment [y/n]?').strip().lower()
+                            if user_input  == 'y':
+                                feedback = input('Assignment rejection feedback:').strip()
+                                client.reject_assignment(
+                                    AssignmentId=assignment_id,
+                                    RequesterFeedback=feedback)
+                            elif user_input == 'n':
+                                break
                     else:
-                        marked_assignments.append([assignment_id, user_input])
-                        logger.info(
-                            f'Did not approve assignment (ID: {assignment_id}).'
-                            f' Marked for manual review or rejection.')
+                        logger.info(f'Skipping assignment (ID: {assignment_id}).')
 
 
     return marked_assignments
@@ -152,6 +168,6 @@ def review_batch(
 
     if marked_assingments:
         with open(marked_file_path, 'w') as f:
-            json.dump(data, f)  
+            json.dump(data, f)
 
     logger.info(f'Review of batch {batch_id} is complete.')
