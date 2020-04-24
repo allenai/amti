@@ -105,7 +105,7 @@ def review_hit(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
                         
-                    elif user_input == 'r':
+                    elif user_input == 'r':  # reject
                         while True:
                             user_input = input('Confirm rejection of this assignment [y/n]?').strip().lower()
                             if user_input  == 'y':
@@ -117,7 +117,7 @@ def review_hit(
                             elif user_input == 'n':
                                 logger.info(f'Did not reject assignment (ID: {assignment_id}). Please review it again.')
                                 break
-                    else:
+                    else:  # skip
                         logger.info(f'Skipping assignment (ID: {assignment_id}).')
 
     return marked_assignments
