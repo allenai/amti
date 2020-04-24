@@ -29,7 +29,8 @@ logger = logging.getLogger(__name__)
     '--qual', '-q', 
     help='QualificationId (or name, if --name flag passed).')
 @click.option(
-    '--integer_value', '-v', 
+    '--integer-value', '-v', 
+    type=int,
     help='Integer value for qual.')
 @click.option(
     '--name', '-n',
@@ -73,7 +74,7 @@ def associate_qual(file, ids, qual, name, integer_value, notify, live):
         "SendNotification": notify
     }
     if integer_value is not None:
-        args['IntegerValue'] = int(integer_value)
+        args['IntegerValue'] = integer_value
 
     # associate qual with workers
     for worker_id in worker_ids:
