@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
     '--qual', '-q', 
     help='QualificationId (or name, if --name flag passed).')
 @click.option(
-    '--integer-value', '-v', 
+    '--integer-value', '-i',
     type=int,
     help='Integer value for qual.')
 @click.option(
