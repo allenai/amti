@@ -28,6 +28,11 @@ logger = logging.getLogger(__name__)
     '--approve-all', '-a',
     is_flag=True,
     help="Approve all submissions.")
+@click.option(
+    '--mark-file', '-m',
+    type=str,
+    default=None,
+    help="Name of the marked files to be saved or empty to output to stdout")
 def review_batch(batch_dir, live, approve_all):
     """Review the batch of HITs defined in BATCH_DIR.
 
@@ -42,6 +47,7 @@ def review_batch(batch_dir, live, approve_all):
     actions.review.review_batch(
         client=client,
         batch_dir=batch_dir,
-        approve_all=approve_all)
+        approve_all=approve_all,
+        mark_file=mark_file)
 
     logger.info('Finished reviewing batch.')
