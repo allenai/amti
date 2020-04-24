@@ -29,7 +29,8 @@ logger = logging.getLogger(__name__)
     '--qual', '-q', 
     help='QualificationId (or name, if --name flag passed).')
 @click.option(
-    '--value', '-v', 
+    '--integer-value', '-i',
+    type=int,
     help='Integer value for qual.')
 @click.option(
     '--name', '-n',
@@ -43,7 +44,7 @@ logger = logging.getLogger(__name__)
     '--live', '-l',
     is_flag=True,
     help='View the status of HITs from the live MTurk site.')
-def associate_qual(file, ids, qual, name, value, notify, live):
+def associate_qual(file, ids, qual, name, integer_value, notify, live):
     """Associate workers with a qualification.
 
     Given a space seperated list of WorkerIds (IDS) and/or a path to
@@ -72,8 +73,8 @@ def associate_qual(file, ids, qual, name, value, notify, live):
         "QualificationTypeId": qual_id,
         "SendNotification": notify
     }
-    if value is not None:
-        args['IntegerValue'] = value
+    if integer_value is not None:
+        args['IntegerValue'] = integer_value
 
     # associate qual with workers
     for worker_id in worker_ids:
