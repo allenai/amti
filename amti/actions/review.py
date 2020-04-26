@@ -3,7 +3,7 @@
 import json
 import logging
 import os
-import sys
+
 from xml.dom import minidom
 
 from amti import settings
@@ -29,7 +29,9 @@ def review_hit(
 
     Returns
     -------
-    List of marked assignments.
+    List[Dict[str, str]]
+        A list of dictionaries representing the marked assignments. Each dictionary
+        has ``"assignment_id"``, ``"action"``, and ``"reason"`` keys.
     """
     logger.debug(f'Fetching HIT (ID: {hit_id}).')
 
@@ -95,7 +97,11 @@ def review_hit(
                                 if user_input in ['a', 'r', 's']:
                                     break
                             marked_reason = input('Reason for marking? (Can be left blank.)').strip()
-                            marked_assignments.append([assignment_id, user_input, marked_reason])
+                            marked_assignments.append({
+                               'assignment_id': assignment_id,
+                               'action': user_input,
+                               'reason': marked_reason
+                            })
                         else:
                             print('Please type either "a", "r", "s", or "m".')
 
@@ -127,7 +133,7 @@ def review_batch(
         client,
         batch_dir,
         approve_all,
-        mark_file=None):
+        mark_file_path):
     """Manually review the HITs in a batch.
 
     Parameters
@@ -138,9 +144,8 @@ def review_batch(
         the path to the directory for the batch.
     approve_all : bool
         a flag to decide approve all submissions
-    mark_file : str
-        the name of marked assignments file saved as a json
-        if None outputs to STDOUT
+    mark_file_path : str
+        the path at which to save the assignment marks.
 
     Returns
     -------
@@ -154,9 +159,6 @@ def review_batch(
         batch_dir, batchid_file_name)
     incomplete_file_path = os.path.join(
         batch_dir, settings.INCOMPLETE_FILE_NAME)
-    if mark_file:
-        marked_file_path = os.path.join(
-            batch_dir, mark_file+".json")
 
     with open(batchid_file_path) as batchid_file:
         batch_id = batchid_file.read().strip()
@@ -176,10 +178,10 @@ def review_batch(
         marked_assignments.extend(review_hit(client=client, hit_id=hit_id, approve_all=approve_all))
 
     if marked_assingments:
-        if mark_file:
-            with open(marked_file_path, 'w') as f:
-                json.dump(marked_assignments, f)
-        else:
-            json.dump(marked_assignments, sys.stdout)
+        with open(marked_file_path, 'w') as marked_file:
+            marked_file.write('\n'.join(
+                json.dumps(marked_assignment)
+                for marked_assignment in marked_assignments
+            ))
 
     logger.info(f'Review of batch {batch_id} is complete.')
