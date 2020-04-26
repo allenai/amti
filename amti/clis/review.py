@@ -29,10 +29,15 @@ logger = logging.getLogger(__name__)
     is_flag=True,
     help="Approve all submissions.")
 @click.option(
-    '--mark-file', '-m',
-    type=str,
-    default=None,
-    help="Name of the marked files to be saved or empty to output to stdout")
+    '--mark-file-path', '-m',
+    type=click.Path(
+        exists=False,
+        file_okay=True,
+        dir_okay=False,
+        writable=True,
+        allow_dash=True),
+    default='-',
+    help='The path to the file in which to save the marked assignments. Defaults to STDOUT.')
 def review_batch(batch_dir, live, approve_all):
     """Review the batch of HITs defined in BATCH_DIR.
 
@@ -48,6 +53,6 @@ def review_batch(batch_dir, live, approve_all):
         client=client,
         batch_dir=batch_dir,
         approve_all=approve_all,
-        mark_file=mark_file)
+        mark_file_path=mark_file_path)
 
     logger.info('Finished reviewing batch.')
