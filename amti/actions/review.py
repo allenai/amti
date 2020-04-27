@@ -3,7 +3,6 @@
 import json
 import logging
 import os
-
 from xml.dom import minidom
 
 import click
@@ -86,8 +85,10 @@ def review_hit(
                             assignment_id=assignment_id,
                             answers=answers_xml.toprettyxml()))
 
-                    input_string = """Would you like to (a)ccept, (r)eject, (s)kip or
-                        (m)ark the assignment? [a/r/s/m]:"""
+                    input_string = (
+                        'Would you like to (a)ccept, (r)eject, (s)kip or'
+                        ' (m)ark the assignment? [a/r/s/m]: '
+                    )
                     while True:
                         user_input = input(input_string).strip().lower()
                         if user_input in ['a', 'r', 's']:
@@ -95,10 +96,16 @@ def review_hit(
                         elif user_input == 'm':
                             print('Assignment marked.')
                             while True:
-                                user_input = input('Would you like to (a)ccept, (r)eject, or (s)kip this assignment?').strip().lower()
+                                user_input = input(
+                                    'Would you like to (a)ccept, (r)eject, or'
+                                    ' (s)kip this assignment? [a/r/s]: '
+                                ).strip().lower()
                                 if user_input in ['a', 'r', 's']:
                                     break
-                            marked_reason = input('Reason for marking? (Can be left blank.)').strip()
+                            marked_reason = input(
+                                '(optional) Reason for marking the'
+                                ' assignment? '
+                            ).strip()
                             marked_assignments.append({
                                'assignment_id': assignment_id,
                                'action': user_input,
@@ -107,25 +114,39 @@ def review_hit(
                         else:
                             print('Please type either "a", "r", "s", or "m".')
 
-                    if user_input == 'a':  # accept
-                        logger.info(f'Approving assignment (ID: {assignment_id}).')
+                    if user_input == 'a':
+                        # Accept the assignment.
+                        logger.info(
+                            f'Approving assignment (ID: {assignment_id}).')
                         client.approve_assignment(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
-                    elif user_input == 'r':  # reject
+                    elif user_input == 'r':
+                        # Reject the assignment.
                         while True:
-                            user_input = input('Confirm rejection of this assignment [y/n]?').strip().lower()
+                            user_input = input(
+                                'Confirm rejection of this assignment? [y/n]: '
+                            ).strip().lower()
                             if user_input  == 'y':
-                                feedback = input('Assignment rejection feedback:').strip()
+                                feedback = input(
+                                    'Assignment rejection feedback: '
+                                ).strip()
                                 client.reject_assignment(
                                     AssignmentId=assignment_id,
                                     RequesterFeedback=feedback)
-                                logger.info(f'Rejecting assignment (ID: {assignment_id}).')
+                                logger.info(
+                                    f'Rejecting assignment'
+                                    f' (ID: {assignment_id}).')
                             elif user_input == 'n':
-                                logger.info(f'Did not reject assignment (ID: {assignment_id}). Please review it again.')
+                                logger.info(
+                                    f'Did not reject assignment'
+                                    f' (ID: {assignment_id}). Please review it'
+                                    f' again.')
                                 break
-                    else:  # skip
-                        logger.info(f'Skipping assignment (ID: {assignment_id}).')
+                    else:
+                        # Skip the assignment.
+                        logger.info(
+                            f'Skipping assignment (ID: {assignment_id}).')
 
     return marked_assignments
 
@@ -176,7 +197,10 @@ def review_batch(
 
     marked_assignments = []
     for hit_id in hit_ids:
-        marked_assignments.extend(review_hit(client=client, hit_id=hit_id, approve_all=approve_all))
+        marked_assignments.extend(review_hit(
+            client=client,
+            hit_id=hit_id,
+            approve_all=approve_all))
 
     with click.open_file(marked_file_path, 'w') as marked_file:
         marked_file.write('\n'.join(
