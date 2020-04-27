@@ -204,9 +204,13 @@ def review_batch(
             hit_id=hit_id,
             approve_all=approve_all))
 
+    logger.info(
+        'Finished reviewing assignments. Writing out marked'
+        ' assignments.'
+    )
     with click.open_file(mark_file_path, 'w') as mark_file:
-        mark_file.write('\n'.join(
-            json.dumps(marked_assignment)
+        mark_file.write(''.join(
+            json.dumps(marked_assignment) + '\n'
             for marked_assignment in marked_assignments
         ))
 
