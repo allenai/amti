@@ -6,6 +6,8 @@ import os
 
 from xml.dom import minidom
 
+import click
+
 from amti import settings
 
 
@@ -110,7 +112,6 @@ def review_hit(
                         client.approve_assignment(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
-                        
                     elif user_input == 'r':  # reject
                         while True:
                             user_input = input('Confirm rejection of this assignment [y/n]?').strip().lower()
@@ -177,11 +178,10 @@ def review_batch(
     for hit_id in hit_ids:
         marked_assignments.extend(review_hit(client=client, hit_id=hit_id, approve_all=approve_all))
 
-    if marked_assingments:
-        with open(marked_file_path, 'w') as marked_file:
-            marked_file.write('\n'.join(
-                json.dumps(marked_assignment)
-                for marked_assignment in marked_assignments
-            ))
+    with click.open_file(marked_file_path, 'w') as marked_file:
+        marked_file.write('\n'.join(
+            json.dumps(marked_assignment)
+            for marked_assignment in marked_assignments
+        ))
 
     logger.info(f'Review of batch {batch_id} is complete.')
