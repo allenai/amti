@@ -36,19 +36,20 @@ def review_hit(
     """
     logger.debug(f'Fetching HIT (ID: {hit_id}).')
 
+    marked_assignments = []
+
     hit = client.get_hit(HITId=hit_id)
     hit_status = hit['HIT']['HITStatus']
     if hit_status != 'Reviewable':
         logger.info(
             f'HIT (ID: {hit_id}) has status "{hit_status}" and is not'
             f' "Reviewable". Skipping.')
-        return
+        return marked_assignments
 
     logger.info(f'HIT {hit_id} Status: {hit_status}')
 
     assignments_paginator = client.get_paginator(
         'list_assignments_for_hit')
-    marked_assignments = []
     assignments_pages = assignments_paginator.paginate(HITId=hit_id)
     for i, assignments_page in enumerate(assignments_pages):
         logger.debug(f'Reviewing assignments. Page {i}.')
