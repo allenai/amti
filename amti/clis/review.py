@@ -37,8 +37,9 @@ logger = logging.getLogger(__name__)
         writable=True,
         allow_dash=True),
     default='-',
-    help='The path to the file in which to save the marked assignments. Defaults to STDOUT.')
-def review_batch(batch_dir, live, approve_all):
+    help='The path to the file in which to save the marked assignments.'
+         ' Defaults to STDOUT.')
+def review_batch(batch_dir, live, approve_all, mark_file_path):
     """Review the batch of HITs defined in BATCH_DIR.
 
     Given a directory (BATCH_DIR) that represents a batch of HITs with
