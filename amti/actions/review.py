@@ -85,67 +85,67 @@ def review_hit(
                             assignment_id=assignment_id,
                             answers=answers_xml.toprettyxml()))
 
-                    input_string = (
+                    assignment_action = click.prompt(
                         'Would you like to (a)ccept, (r)eject, (s)kip or'
-                        ' (m)ark the assignment? [a/r/s/m]: '
+                        ' (m)ark the assignment?',
+                        type=click.Choice(
+                            ['a', 'r', 's', 'm'],
+                            case_sensitive=False
+                        )
                     )
-                    while True:
-                        user_input = input(input_string).strip().lower()
-                        if user_input in ['a', 'r', 's']:
-                            break
-                        elif user_input == 'm':
-                            logger.info('Assignment marked.')
-                            while True:
-                                user_input = input(
-                                    'Would you like to (a)ccept, (r)eject, or'
-                                    ' (s)kip this assignment? [a/r/s]: '
-                                ).strip().lower()
-                                if user_input in ['a', 'r', 's']:
-                                    break
-                            marked_reason = input(
-                                '(optional) Reason for marking the'
-                                ' assignment? '
-                            ).strip()
-                            marked_assignments.append({
-                               'assignment_id': assignment_id,
-                               'action': user_input,
-                               'reason': marked_reason
-                            })
-                        else:
-                            click.echo(
-                                'Please type either "a", "r", "s", or "m".')
+                    if assignment_action == 'm':
+                        logger.info('Marking assignment.')
+                        assignment_action = click.prompt(
+                            'Marking assignment. After, would you like to'
+                            ' (a)ccept,(r)eject, or (s)kip this assignment?',
+                            type=click.Choice(
+                                ['a', 'r', 's'],
+                                case_sensitive=False
+                            )
+                        )
+                        mark_reason = click.prompt(
+                            '(optional) Reason for marking the assignment?',
+                            type=str
+                        )
+                        marked_assignments.append({
+                            'assignment_id': assignment_id,
+                            'action': assignment_action,
+                            'reason': mark_reason
+                        })
 
-                    if user_input == 'a':
-                        # Accept the assignment.
+                    # Accept the assignment.
+                    if assignment_action == 'a':
                         logger.info(
                             f'Approving assignment (ID: {assignment_id}).')
                         client.approve_assignment(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
-                    elif user_input == 'r':
+                    # Reject the assignment.
+                    elif assignment_action == 'r':
+                        # Ask for confirmation before rejecting.
+                        rejection_confirmed = click.confirm(
+                            'Are you sure you want to reject this'
+                            ' assignment?'
+                        )
                         # Reject the assignment.
-                        while True:
-                            user_input = input(
-                                'Confirm rejection of this assignment? [y/n]: '
-                            ).strip().lower()
-                            if user_input  == 'y':
-                                feedback = input(
-                                    'Assignment rejection feedback: '
-                                ).strip()
-                                client.reject_assignment(
-                                    AssignmentId=assignment_id,
-                                    RequesterFeedback=feedback)
-                                logger.info(
-                                    f'Rejecting assignment'
-                                    f' (ID: {assignment_id}).')
-                            elif user_input == 'n':
-                                logger.info(
-                                    f'Did not reject assignment'
-                                    f' (ID: {assignment_id}). Please review it'
-                                    f' again.')
-                                break
+                        if rejection_confirmed:
+                            rejection_feedback = click.prompt(
+                                'Feedback for the rejection',
+                                type=str
+                            )
+                            client.reject_assignment(
+                                AssignmentId=assignment_id,
+                                RequesterFeedback=rejection_feedback)
+                            logger.info(
+                                f'Rejecting assignment'
+                                f' (ID: {assignment_id}).')
+                        # Abort rejecting the assignment.
+                        else:
+                            logger.info(
+                                f'Did not reject assignment'
+                                f' (ID: {assignment_id}). Skipping.')
+                    # Skip the assignment.
                     else:
-                        # Skip the assignment.
                         logger.info(
                             f'Skipping assignment (ID: {assignment_id}).')
 
