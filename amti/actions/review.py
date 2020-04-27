@@ -203,8 +203,8 @@ def review_batch(
             hit_id=hit_id,
             approve_all=approve_all))
 
-    with click.open_file(marked_file_path, 'w') as marked_file:
-        marked_file.write('\n'.join(
+    with click.open_file(mark_file_path, 'w') as mark_file:
+        mark_file.write('\n'.join(
             json.dumps(marked_assignment)
             for marked_assignment in marked_assignments
         ))
