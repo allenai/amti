@@ -74,7 +74,7 @@ def review_hit(
                 else:
                     logger.info(f'Reviewing assignment (ID: {assignment_id}).')
 
-                    print(
+                    click.echo(
                         'HIT ID: {hit_id}'
                         '\nAssignment ID: {assignment_id}'
                         '\n'
@@ -94,7 +94,7 @@ def review_hit(
                         if user_input in ['a', 'r', 's']:
                             break
                         elif user_input == 'm':
-                            print('Assignment marked.')
+                            logger.info('Assignment marked.')
                             while True:
                                 user_input = input(
                                     'Would you like to (a)ccept, (r)eject, or'
@@ -112,7 +112,8 @@ def review_hit(
                                'reason': marked_reason
                             })
                         else:
-                            print('Please type either "a", "r", "s", or "m".')
+                            click.echo(
+                                'Please type either "a", "r", "s", or "m".')
 
                     if user_input == 'a':
                         # Accept the assignment.

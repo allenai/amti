@@ -44,7 +44,7 @@ def status_batch(batch_dir, live):
         f'{status}: {count}'
         for status, count in batch_status['hit_status_counts'].items())
 
-    print(
+    click.echo(
       f'\n'
         f'  Batch Status:'
       f'\n  ============='
