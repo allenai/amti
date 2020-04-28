@@ -5,6 +5,8 @@ import logging
 import os
 from xml.dom import minidom
 
+import click
+
 from amti import settings
 
 
@@ -28,9 +30,13 @@ def review_hit(
 
     Returns
     -------
-    None.
+    List[Dict[str, str]]
+        A list of dictionaries representing the marked assignments. Each dictionary
+        has ``"assignment_id"``, ``"action"``, and ``"reason"`` keys.
     """
     logger.debug(f'Fetching HIT (ID: {hit_id}).')
+
+    marked_assignments = []
 
     hit = client.get_hit(HITId=hit_id)
     hit_status = hit['HIT']['HITStatus']
@@ -38,7 +44,7 @@ def review_hit(
         logger.info(
             f'HIT (ID: {hit_id}) has status "{hit_status}" and is not'
             f' "Reviewable". Skipping.')
-        return
+        return marked_assignments
 
     logger.info(f'HIT {hit_id} Status: {hit_status}')
 
@@ -69,7 +75,7 @@ def review_hit(
                 else:
                     logger.info(f'Reviewing assignment (ID: {assignment_id}).')
 
-                    print(
+                    click.echo(
                         'HIT ID: {hit_id}'
                         '\nAssignment ID: {assignment_id}'
                         '\n'
@@ -80,29 +86,78 @@ def review_hit(
                             assignment_id=assignment_id,
                             answers=answers_xml.toprettyxml()))
 
-                    approve = None
-                    while approve is None:
-                        user_input = input('Approve? [y/n]').strip().lower()
-                        if user_input in ['y', 'n']:
-                            approve = user_input == 'y'
-                        else:
-                            print('Please type either "y" or "n".')
+                    assignment_action = click.prompt(
+                        'Would you like to (a)ccept, (r)eject, (s)kip or'
+                        ' (m)ark the assignment?',
+                        type=click.Choice(
+                            ['a', 'r', 's', 'm'],
+                            case_sensitive=False
+                        )
+                    )
+                    if assignment_action == 'm':
+                        logger.info('Marking assignment.')
+                        assignment_action = click.prompt(
+                            'Marking assignment. After, would you like to'
+                            ' (a)ccept, (r)eject, or (s)kip this assignment?',
+                            type=click.Choice(
+                                ['a', 'r', 's'],
+                                case_sensitive=False
+                            )
+                        )
+                        mark_reason = click.prompt(
+                            '(optional) Reason for marking the assignment?',
+                            type=str
+                        )
+                        marked_assignments.append({
+                            'assignment_id': assignment_id,
+                            'action': assignment_action,
+                            'reason': mark_reason
+                        })
 
-                    if approve:
-                        logger.info(f'Approving assignment (ID: {assignment_id}).')
+                    # Accept the assignment.
+                    if assignment_action == 'a':
+                        logger.info(
+                            f'Approving assignment (ID: {assignment_id}).')
                         client.approve_assignment(
                             AssignmentId=assignment_id,
                             OverrideRejection=False)
+                    # Reject the assignment.
+                    elif assignment_action == 'r':
+                        # Ask for confirmation before rejecting.
+                        rejection_confirmed = click.confirm(
+                            'Are you sure you want to reject this'
+                            ' assignment?'
+                        )
+                        # Reject the assignment.
+                        if rejection_confirmed:
+                            rejection_feedback = click.prompt(
+                                'Feedback for the rejection',
+                                type=str
+                            )
+                            client.reject_assignment(
+                                AssignmentId=assignment_id,
+                                RequesterFeedback=rejection_feedback)
+                            logger.info(
+                                f'Rejecting assignment'
+                                f' (ID: {assignment_id}).')
+                        # Abort rejecting the assignment.
+                        else:
+                            logger.info(
+                                f'Did not reject assignment'
+                                f' (ID: {assignment_id}). Skipping.')
+                    # Skip the assignment.
                     else:
                         logger.info(
-                            f'Did not approve assignment (ID: {assignment_id}).'
-                            f' Please make sure to manually reject it.')
+                            f'Skipping assignment (ID: {assignment_id}).')
+
+    return marked_assignments
 
 
 def review_batch(
         client,
         batch_dir,
-        approve_all):
+        approve_all,
+        mark_file_path):
     """Manually review the HITs in a batch.
 
     Parameters
@@ -113,6 +168,8 @@ def review_batch(
         the path to the directory for the batch.
     approve_all : bool
         a flag to decide approve all submissions
+    mark_file_path : str
+        the path at which to save the assignment marks.
 
     Returns
     -------
@@ -140,7 +197,21 @@ def review_batch(
 
     logger.info(f'Reviewing batch {batch_id}.')
 
+    marked_assignments = []
     for hit_id in hit_ids:
-        review_hit(client=client, hit_id=hit_id, approve_all=approve_all)
+        marked_assignments.extend(review_hit(
+            client=client,
+            hit_id=hit_id,
+            approve_all=approve_all))
+
+    logger.info(
+        'Finished reviewing assignments. Writing out marked'
+        ' assignments.'
+    )
+    with click.open_file(mark_file_path, 'w') as mark_file:
+        mark_file.write(''.join(
+            json.dumps(marked_assignment) + '\n'
+            for marked_assignment in marked_assignments
+        ))
 
     logger.info(f'Review of batch {batch_id} is complete.')
