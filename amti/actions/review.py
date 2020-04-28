@@ -98,7 +98,7 @@ def review_hit(
                         logger.info('Marking assignment.')
                         assignment_action = click.prompt(
                             'Marking assignment. After, would you like to'
-                            ' (a)ccept,(r)eject, or (s)kip this assignment?',
+                            ' (a)ccept, (r)eject, or (s)kip this assignment?',
                             type=click.Choice(
                                 ['a', 'r', 's'],
                                 case_sensitive=False
