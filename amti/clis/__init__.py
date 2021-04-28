@@ -3,6 +3,7 @@
 from amti.clis import (
     associate,
     block,
+    blocked,
     create,
     delete,
     disassociate,

@@ -48,6 +48,8 @@ subcommands = [
     clis.notify.notify_workers,
     # block workers
     clis.block.block_workers,
+    # list blocked workers
+    clis.blocked.list_blocked,
     # unblock workers
     clis.unblock.unblock_workers,
     # associate qual
