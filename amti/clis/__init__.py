@@ -2,6 +2,7 @@
 
 from amti.clis import (
     associate,
+    associated,
     block,
     create,
     delete,

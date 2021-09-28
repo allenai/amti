@@ -54,6 +54,8 @@ subcommands = [
     clis.associate.associate_qual,
     # disassociate qual
     clis.disassociate.disassociate_qual,
+    # list workers associated with a qual
+    clis.associated.associated,
     # preview
     clis.preview.preview_batch
 ]
