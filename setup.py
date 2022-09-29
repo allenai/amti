@@ -14,7 +14,7 @@ setup(
     long_description=readme,
     url='http://github.com/allenai/amti',
     author='Nicholas Lourie',
-    author_email='nicholasl@allenai.org',
+    author_email='nicholasl@collaborator.allenai.org',
     keywords='amti mechanical turk mturk crowdsourcing',
     classifiers=[
         'Development Status :: 3 - Alpha',
